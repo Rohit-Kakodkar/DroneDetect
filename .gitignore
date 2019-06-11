@@ -1,0 +1,24 @@
+# Python Notebooks
+*.ipynb
+*.ipynb_checkpoints
+
+# Compiled class file
+*.pyc
+
+# Log file
+*.log
+
+# AWS Keys
+*.pem
+
+# Package Files
+*.zip
+*.tar.gz
+*.rar
+*.jar
+
+# YAML Files
+*.yml
+
+# Google API Key File
+GoogleAPIKey.config
