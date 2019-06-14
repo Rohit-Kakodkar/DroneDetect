@@ -21,3 +21,6 @@
 
 # Google API Key File
 GoogleAPIKey.config
+
+# Files in development
+spark*

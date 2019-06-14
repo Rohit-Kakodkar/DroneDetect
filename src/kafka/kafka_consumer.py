@@ -1,3 +1,7 @@
+"""
+	Testing kafka consumer
+"""
+
 from kafka import KafkaConsumer
 from json import loads
 import matplotlib.pyplot as plt

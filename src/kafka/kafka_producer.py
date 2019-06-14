@@ -23,8 +23,26 @@ parser.add_argument('--partition', type=int, default=0,
 args = parser.parse_args()
 
 class Generate_data():
+    """
+        Class to simulate sensor data
+            output : kafka dump of json
+                    {
+                        "Location" - has not added yet
+                        "barometric reading"
+                        "gyroscope reading x" - rotation around x-axis
+                        "gyroscope reading y" - rotation around y-axis
+                        "Wind speed"
+                        }
+    """
 
     def __init__(self, address, n):
+        """
+            Intialize variables
+            ndrones = Number of drones
+            event_log = Logical which initiates an anomalous events
+            event_log_time = time parameter for anamalous events
+            __barometer_event_reading = barometric event resulting from anomalous event
+        """
         self.dataProducer = KafkaProducer(bootstrap_servers=[address])
         self.ndrones = n
         self.event_log = np.zeros(n, dtype = bool)
@@ -32,15 +50,24 @@ class Generate_data():
         self.__barometer_event_reading = np.zeros(n)
 
     def Serialize_JSON(self):
+        """
+            Serialize datetime JSON for kafka producer
+        """
         if isinstance(self.TimeStamp, datetime):
             return self.TimeStamp.__str__()
 
     def instantiate_event(self):
+        """
+            instantiate anomalous event
+        """
         for i in range(self.ndrones):
             if np.random.uniform(0,1) < 0.05:
                 self.event_log[i] = True
 
     def stop_event(self):
+        """
+            Stop anamalous event
+        """
         for i in range(self.ndrones):
             if self.event_log[i] and self.event_log_time[i]>=5:
                 self.event_log[i] = False
@@ -52,6 +79,9 @@ class Generate_data():
                 self.event_log_time += dt
 
     def generate_event(self):
+        """
+            simulate __barometer_event_reading from anamalous event
+        """
         self.instantiate_event()
         self.update_time_log()
         for i in range(self.ndrones):
@@ -61,6 +91,9 @@ class Generate_data():
                                                     .generate_altitude()
 
     def ProduceData(self):
+        """
+            Produce data and sent to kafka producer
+        """
         self.TimeStamp = datetime.now()
         print(self.TimeStamp)
         while True:
@@ -78,8 +111,10 @@ class Generate_data():
                                 "wind_speed" : wind_speed[device_id]}).encode('utf-8')
                 sleep(0.1)
 
-            self.dataProducer.send('sensor_data', value = data)
+            self.dataProducer.send('sensor-data', value = data)
             self.stop_event()
+
+            pause(5)
 
 if __name__ == '__main__':
     address = str(args.broker)

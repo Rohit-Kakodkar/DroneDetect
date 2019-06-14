@@ -4,6 +4,10 @@ import scipy.stats as stats
 import math
 
 class recovery_event():
+    """
+        Recovery event class to simulate data
+        generate_altitude : simulates a inverted gaussian curve
+    """
 
     def __init__(self, mu, variance, drop, ts, speed):
         self.mu = mu
@@ -13,4 +17,7 @@ class recovery_event():
         self.drop = drop
 
     def generate_altitude(self):
+        """
+            return barometer reading from recovery event
+        """
         return -self.drop * stats.norm.pdf(self.x, self.mu, self.sigma)
