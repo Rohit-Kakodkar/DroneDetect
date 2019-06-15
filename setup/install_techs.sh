@@ -21,12 +21,6 @@ for tech in zookeeper kafka ; do
   peg install ${KAFKA_CLUSTER} $tech
 done
 
-
-# Pegasus has a bug where the zoo.cfg is corrupted
-# So we will rm the default one and create our own later
-peg sshcmd-cluster ${KAFKA_CLUSTER} "rm /usr/local/zookeeper/conf/zoo.cfg"
-
-
 # Find number of nodes in kafka-cluster
 NUMBER_OF_NODES=`peg describe kafka-cluster | grep ec2 | wc -l`
 

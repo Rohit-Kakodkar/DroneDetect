@@ -1,5 +1,5 @@
 SERVERS=""
-for ((i=0; i=$NUMBER_OF_NODES; i++)); do # for loop to generate server.n
+for ((i=0; i<=$NUMBER_OF_NODES; i++)); do # for loop to generate server.n
   servervar="${KAFKA_CLUSTER}_${i}"
   SERVERS="$SERVERS\n server.${i}=${!servervar}:2888:3888"
 done

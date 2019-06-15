@@ -9,4 +9,4 @@ dest=/home/ubuntu/.profile
 
 
 echo "Downloading remote repository"
-peg sshcmd-cluster ${KAFKA_CLUSTER} "git clone -b develop https://github.com/AndreyBozhko/TaxiOptimizer"
+peg sshcmd-cluster ${KAFKA_CLUSTER} "git clone -b develop git@github.com:Rohit-Kakodkar/DroneDetect.git"

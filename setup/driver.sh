@@ -11,7 +11,7 @@ bash $SETUP_DEST/copy_idrsapub_to_workers.sh
 bash $SETUP_DEST/copy_allnodesdns_to_master.sh
 
 bash install_techs.sh
-
-bash pull_repos.sh
-
-peg sshcmd-cluster ${KAFKA_CLUSTER} "bash ~/DroneDetect/setup/fix_zookeeper.sh"
+#
+# bash pull_repos.sh
+#
+# peg sshcmd-cluster ${KAFKA_CLUSTER} "bash ~/DroneDetect/setup/fix_zookeeper.sh"
