@@ -9,6 +9,7 @@ from time import sleep
 from json import dumps
 from kafka import KafkaProducer
 import numpy as np
+import time
 import argparse
 
 parser = argparse.ArgumentParser(description='Data generation')
@@ -28,6 +29,7 @@ class Generate_data():
             output : kafka dump of json
                     {
                         "Location" - has not added yet
+                        "time" - TimeStamp
                         "barometric reading"
                         "gyroscope reading x" - rotation around x-axis
                         "gyroscope reading y" - rotation around y-axis
@@ -43,7 +45,9 @@ class Generate_data():
             event_log_time = time parameter for anamalous events
             __barometer_event_reading = barometric event resulting from anomalous event
         """
-        self.dataProducer = KafkaProducer(bootstrap_servers=[address])
+        self.dataProducer = KafkaProducer(bootstrap_servers=[   'ec2-18-204-93-129.compute-1.amazonaws.com:9092', \
+                                                                'ec2-34-203-134-110.compute-1.amazonaws.com:9092', \
+                                                                'ec2-3-217-100-77.compute-1.amazonaws.com:9092'])
         self.ndrones = n
         self.event_log = np.zeros(n, dtype = bool)
         self.event_log_time = -5*np.ones(n)
@@ -61,7 +65,7 @@ class Generate_data():
             instantiate anomalous event
         """
         for i in range(self.ndrones):
-            if np.random.uniform(0,1) < 0.05:
+            if np.random.uniform(0,1) < 0.001:
                 self.event_log[i] = True
 
     def stop_event(self):
@@ -71,6 +75,7 @@ class Generate_data():
         for i in range(self.ndrones):
             if self.event_log[i] and self.event_log_time[i]>=5:
                 self.event_log[i] = False
+                self.event_log_time[i] = -5
 
     def update_time_log(self):
         dt = 0.1
@@ -98,7 +103,7 @@ class Generate_data():
         print(self.TimeStamp)
         while True:
             self.generate_event()
-            baromatric_reading = np.random.uniform(395, 400, n) + self.__barometer_event_reading
+            baromatric_reading = np.random.uniform(395, 405, n) + self.__barometer_event_reading
             gyrometer_x = np.random.uniform(-0.4, 0.4, n)
             gyrometer_y = np.random.uniform(-0.4, 0.4, n)
             wind_speed = 55*np.ones(n)
@@ -106,15 +111,14 @@ class Generate_data():
             for device_id in range(n):
                 data = dumps({  "device_id" : device_id,
                                 "baromatric_reading" : baromatric_reading[device_id],
+                                "TimeStamp" : time.time(),
                                 "gyrometer_x" : gyrometer_x[device_id],
                                 "gyrometer_y" : gyrometer_y[device_id],
                                 "wind_speed" : wind_speed[device_id]}).encode('utf-8')
                 sleep(0.1)
 
-            self.dataProducer.send('sensor-data', value = data)
-            self.stop_event()
-
-            pause(5)
+                self.dataProducer.send('sensor-data', value = data)
+                self.stop_event()
 
 if __name__ == '__main__':
     address = str(args.broker)

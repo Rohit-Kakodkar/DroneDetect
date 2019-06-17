@@ -8,8 +8,7 @@ if __name__ == '__main__':
 
     sc = SparkContext(appName = 'DroneDetect')
     ssc = StreamingContext(sc, 10)
-    kafkaStream = KafkaUtils.createDirectStream\
-                            (ssc, ['sensor-data'], {"metadata.broker.list": 'localhost:9092'})
+    kafkaStream = KafkaUtils.createDirectStream(ssc, ['sensor-data'], {"metadata.broker.list": 'localhost:9092'})
 
     rdd = kafkaStream.map(lambda x: x[1])
 
