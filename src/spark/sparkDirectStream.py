@@ -16,6 +16,7 @@ import json
 import numpy as np
 import scipy.stats as stats
 import math
+import pgConnector
 
 def quiet_logs( sc ):
     logger = sc._jvm.org.apache.log4j
@@ -107,7 +108,16 @@ def testing(rdd):
                                 withColumn("Error", anamoly_udf("barometric_reading", "TimeStamp"))
                                 # withColumn("Anamoly", anamoly_udf("barometric_reading")).\
                                 # withColumn("count", count_udf("barometric_reading"))
+
+        Minimum_DF = Minimum_DF.drop(['baromatric_reading', 'TimeStamp', 'min'])
+
         Minimum_DF.show()
+
+        # connector = PostgresConnector()
+        # connector.write(Minimum_DF, devices, 'Overwrite')
+
+
+
 
 
 
