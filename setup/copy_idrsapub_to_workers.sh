@@ -5,7 +5,7 @@
 
 line=`cat ~/.ssh/id_rsa.pub`
 
-clusters=kafka-cluster
+clusters=kafka-cluster,spark-cluster
 
 
 clusters=`echo $clusters | sed s/","/" "/g`

@@ -75,7 +75,7 @@ def detect_anamoly(barometric_reading, TimeStamp):
 
         Error = RMSE(sliced_barometric, anomalous_event)
 
-        if Error < 12:
+        if Error < 20:
             return True
         else:
             return False
@@ -97,21 +97,17 @@ def testing(rdd):
                                 alias('barometric_reading'),\
                                  f.collect_list('TimeStamp').\
                                  alias('TimeStamp'))
-        GroupedDF.show()
-        #
-        minimum_udf = udf(get_min, FloatType())
+
         anamoly_udf = udf(detect_anamoly, BooleanType())
         # # count_udf = udf(get_count, IntegerType())
         #
 
-        Minimum_DF = GroupedDF.withColumn("min", minimum_udf("barometric_reading", "TimeStamp")).\
-                                withColumn("Error", anamoly_udf("barometric_reading", "TimeStamp"))
+        Minimum_DF = GroupedDF.withColumn("Error", anamoly_udf("barometric_reading", "TimeStamp"))
                                 # withColumn("Anamoly", anamoly_udf("barometric_reading")).\
                                 # withColumn("count", count_udf("barometric_reading"))
 
-        Minimum_DF = Minimum_DF.drop(['baromatric_reading', 'TimeStamp', 'min'])
+        Minimum_DF = Minimum_DF.drop('barometric_reading')
 
-        Minimum_DF.show()
 
         # connector = PostgresConnector()
         # connector.write(Minimum_DF, devices, 'Overwrite')
@@ -134,11 +130,13 @@ if __name__ == '__main__':
     parser.add_argument('--broker', type=str, default='localhost:9092', help = 'List all kafka brokers')
     parser.add_argument('--topic', type=str, default='sensor-data', help='name of the topic to be listing for')
 
+
     sc = SparkContext(appName = 'DroneDetect').getOrCreate()
     quiet_logs(sc)
     ssc = StreamingContext(sc, 60)
     spark = SparkSession(sc)
-    kafkaStream = KafkaUtils.createDirectStream(ssc, ['sensor-data'], {"metadata.broker.list": 'localhost:9092'})
+    kafkaStream = KafkaUtils.createDirectStream(ssc, ['sensor-data'], {"metadata.broker.list": \
+                                                'ec2-52-203-135-135.compute-1.amazonaws.com:9092,ec2-52-70-111-222.compute-1.amazonaws.com:9092,ec2-34-193-78-218.compute-1.amazonaws.com:9092'})
 
 #    data = kafkaStream.collect()
 

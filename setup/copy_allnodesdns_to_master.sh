@@ -5,7 +5,7 @@
 output=""
 dest=/home/ubuntu/.profile
 
-clusters=kafka-cluster
+clusters=kafka-cluster,spark-cluster
 
 
 clusters=`echo $clusters | sed s/","/" "/g`
