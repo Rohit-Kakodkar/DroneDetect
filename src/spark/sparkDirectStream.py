@@ -137,7 +137,7 @@ def process_drones(rdd):
 
         malfunctioning_df = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", "TimeStamp"))
 
-        malfunctioning_DF = Minimum_DF.drop('barometric_reading')
+        malfunctioning_DF = malfunctioning_DF.drop('barometric_reading')
 
         connector = PostgresConnector()
         connector.write(malfunctioning_DF, devices, 'overwrite')
