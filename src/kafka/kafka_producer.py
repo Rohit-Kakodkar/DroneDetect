@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.insert(0, '/home/rohit/DroneDetect/src/utility')
-
 from events import recovery_event
 import math
 from datetime import datetime
@@ -12,16 +8,18 @@ import numpy as np
 import time
 import argparse
 
-parser = argparse.ArgumentParser(description='Data generation')
-parser.add_argument('--number_of_devices', type=int, default=1,
-                    help='Total number of drones deployed')
-# define broker list
-parser.add_argument('--broker', type=str, default= 'localhost:9092', help='list of brokers')
-# define the partition where kafka should write
-parser.add_argument('--partition', type=int, default=0,
-                    help="partition on which this producer should send")
+def parse_args():
 
-args = parser.parse_args()
+    parser = argparse.ArgumentParser(description='Data generation')
+    parser.add_argument('--number_of_devices', type=int, default=1,\
+                                help='Total number of drones deployed')
+    parser.add_argument('--broker', type=str, default= 'localhost:9092', \
+                                nargs = '+', help='list of brokers')
+    parser.add_argument('--partition', type=int, default=0,
+                                help="partition on which this producer should send")
+    args = parser.parse_args()
+
+    return args
 
 class Generate_data():
     """
@@ -45,9 +43,7 @@ class Generate_data():
             event_log_time = time parameter for anamalous events
             __barometer_event_reading = barometric event resulting from anomalous event
         """
-        self.dataProducer = KafkaProducer(bootstrap_servers=[   'ec2-18-204-93-129.compute-1.amazonaws.com:9092', \
-                                                                'ec2-34-203-134-110.compute-1.amazonaws.com:9092', \
-                                                                'ec2-3-217-100-77.compute-1.amazonaws.com:9092'])
+        self.dataProducer = KafkaProducer(bootstrap_servers=[address])
         self.ndrones = n
         self.event_log = np.zeros(n, dtype = bool)
         self.event_log_time = -5*np.ones(n)
@@ -103,26 +99,33 @@ class Generate_data():
         print(self.TimeStamp)
         while True:
             self.generate_event()
-            baromatric_reading = np.random.uniform(395, 405, n) + self.__barometer_event_reading
-            gyrometer_x = np.random.uniform(-0.4, 0.4, n)
-            gyrometer_y = np.random.uniform(-0.4, 0.4, n)
-            wind_speed = 55*np.ones(n)
+            baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
+            latitude = np.zeros(self.ndrones)
+            longitude = np.zeros(self.ndrones)
+            gyrometer_x = np.random.uniform(-0.4, 0.4, self.ndrones)
+            gyrometer_y = np.random.uniform(-0.4, 0.4, self.ndrones)
+            wind_speed = 55*np.ones(self.ndrones)
 
+            # generate data for every device/drone
             for device_id in range(n):
                 data = dumps({  "device_id" : device_id,
-                                "baromatric_reading" : baromatric_reading[device_id],
+                                "latitude" : latitude[device_id],
+                                "longitude" : longitude[device_id],
+                                "barometric_reading" : baromatric_reading[device_id],
                                 "TimeStamp" : time.time(),
                                 "gyrometer_x" : gyrometer_x[device_id],
                                 "gyrometer_y" : gyrometer_y[device_id],
                                 "wind_speed" : wind_speed[device_id]}).encode('utf-8')
-                sleep(0.1)
 
                 self.dataProducer.send('sensor-data', value = data)
-                self.stop_event()
+
+            self.stop_event()
 
 if __name__ == '__main__':
-    address = str(args.broker)
-    partition_id = str(args.partition)
+
+    args = parse_args()
+    address = args.broker
+    partition_id = args.partition
     n = args.number_of_devices
     producer = Generate_data(address, n)
     producer.ProduceData()

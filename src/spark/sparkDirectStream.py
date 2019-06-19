@@ -1,9 +1,5 @@
-# import sys
-# import os
-# sys.path.insert(0, '/home/rohit/DroneDetect/src/utility')
-
-import argparse
-from pyspark import SparkContext
+from argparse import ArgumentParser
+from pyspark import SparkContext, SparkConf
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql import SQLContext
@@ -18,17 +14,52 @@ import scipy.stats as stats
 import math
 import pgConnector
 
+def parse_args():
+    '''
+        Argument parser
+    '''
+
+    parser = ArgumentParser(description = 'DroneDetect')
+    parser.add_argument('--broker', default='localhost:9092',\
+                                help = 'List all kafka brokers')
+    parser.add_argument('--topic', default='sensor-data', \
+                                help = 'Topic to which spark is subscribed to')
+    # parser.add_argument('--psnode', default='localhost:5432',\
+    #                             help = 'Location of postgres database')
+    # parser.add_argument('--dbname', default='dronedetect', \
+    #                             help = 'Name of the postgres database')
+    parser.add_argument('--spark_master', default='localhost', \
+                                help = 'Name of master spark node')
+    args = parser.parse_args()
+    return args
+
+def spark_conf(master):
+    '''
+        Spark config inputs to increase throughput of spark Streaming
+            input - master : DNS of spark master node
+            rvalue - spark_config object
+    '''
+    sc_conf = SparkConf()
+    sc_conf.setAppName("DroneDetect")
+    # sc_conf.setMaster("{}:7077".format(master))
+    # sc_conf.set("spark.executor.memory", "1000m")
+    # sc_conf.set("spark.executor.cores", "2")
+    # sc_conf.set("spark.executor.instances", "15")
+    # sc_conf.set("spark.driver.memory", "5000m")
+    # sc_conf.set("spark.executor.heartbeatInterval", "20")
+
+    return sc_conf
+
 def quiet_logs( sc ):
     logger = sc._jvm.org.apache.log4j
     logger.LogManager.getLogger("org"). setLevel( logger.Level.ERROR )
     logger.LogManager.getLogger("akka").setLevel( logger.Level.ERROR )
 
-def get_min(ar1, ar2):
-    return (min(ar1))
-
 def get_anomalous_event(length_array):
-
-    ts = np.linspace(-10, 10, 200)
+    '''
+        Generate expected anomalous signal from barometric data
+    '''
+    ts = np.linspace(-10, 10, length_array)
     speed = 1
     mu = 1
     variance = 1
@@ -41,37 +72,38 @@ def get_anomalous_event(length_array):
     return np.array(y_ideal), np.array(ts)
 
 def RMSE(ar1, ar2):
+    '''
+        Root Mean Square Error
+    '''
     arr = ar1 - ar2
     return np.sqrt(np.sum(np.square(arr))/len(ar1))
 
-def detect_anamoly(barometric_reading, TimeStamp):
-
+def detect_barometric_anamoly(barometric_reading, TimeStamp):
+    '''
+        Driver function to detect barometric anamolies
+    '''
     barometric_reading = np.asarray(barometric_reading)
     TimeStamp = np.asarray(TimeStamp)
-
 
     if np.amin(barometric_reading)>370:
         return False
     else:
-    #     # Time at which the drone height is lowest
+        # Time at which the drone height is lowest
         Minimum_time = TimeStamp[np.where(barometric_reading == min(barometric_reading))]
 
+        # Define window size that you wanna pick out the data
+        # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
         Window_Size_Secs = 10
         sliced_barometric = barometric_reading[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
                                                          (TimeStamp < (Minimum_time + Window_Size_Secs)))]
         sliced_TimeStamp = TimeStamp[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
                                             (TimeStamp < (Minimum_time + Window_Size_Secs)))]
 
-        length_array = barometric_reading.size
+        # generate expected malfunctioning device data
+        length_array = sliced_barometric.size
         anomalous_event, ts = get_anomalous_event(length_array)
-
         anomalous_event = anomalous_event[np.where((ts >= (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
                                                     (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
-        #
-        if sliced_barometric.size > anomalous_event.size:
-            sliced_barometric = sliced_barometric[:anomalous_event.size]
-        elif anomalous_event.size > sliced_barometric.size:
-            anomalous_event = anomalous_event[:sliced_barometric.size]
 
         Error = RMSE(sliced_barometric, anomalous_event)
 
@@ -80,7 +112,10 @@ def detect_anamoly(barometric_reading, TimeStamp):
         else:
             return False
 
-def testing(rdd):
+def process_drones(rdd):
+    '''
+        Driver function to process drone rdd's and select sensor data close to the event
+    '''
 
     if rdd.isEmpty():
 	       print("RDD is empty")
@@ -99,60 +134,43 @@ def testing(rdd):
                                  alias('TimeStamp'))
 
         anamoly_udf = udf(detect_anamoly, BooleanType())
-        # # count_udf = udf(get_count, IntegerType())
-        #
 
         Minimum_DF = GroupedDF.withColumn("Error", anamoly_udf("barometric_reading", "TimeStamp"))
-                                # withColumn("Anamoly", anamoly_udf("barometric_reading")).\
-                                # withColumn("count", count_udf("barometric_reading"))
 
         Minimum_DF = Minimum_DF.drop('barometric_reading')
 
-
-        # connector = PostgresConnector()
-        # connector.write(Minimum_DF, devices, 'Overwrite')
-
-
-
-
-
-
-    # print(GroupedDF['count'])
-    #
-    #
-    # total_values = df.groupBy("device_id").barometric_reading
-    # total_values.pprint()
-
+        connector = PostgresConnector()
+        connector.write(Minimum_DF, devices, 'Overwrite')
 
 if __name__ == '__main__':
+    '''
+        Main function to launch spark job
+    '''
 
-    parser = argparse.ArgumentParser(description='Spark Streaming')
-    parser.add_argument('--broker', type=str, default='localhost:9092', help = 'List all kafka brokers')
-    parser.add_argument('--topic', type=str, default='sensor-data', help='name of the topic to be listing for')
+    args = parse_args()
+    broker = args.broker
+    topic = args.topic
+    master = args.spark_master
+    sc_conf = spark_conf(master)
 
-
-    sc = SparkContext(appName = 'DroneDetect').getOrCreate()
+    sc = SparkContext(conf = sc_conf).getOrCreate()
     quiet_logs(sc)
     ssc = StreamingContext(sc, 60)
     spark = SparkSession(sc)
-    kafkaStream = KafkaUtils.createDirectStream(ssc, ['sensor-data'], {"metadata.broker.list": \
-                                                'ec2-52-203-135-135.compute-1.amazonaws.com:9092,ec2-52-70-111-222.compute-1.amazonaws.com:9092,ec2-34-193-78-218.compute-1.amazonaws.com:9092'})
-
-#    data = kafkaStream.collect()
+    kafkaStream = KafkaUtils.createDirectStream(ssc, [topic], {"metadata.broker.list": broker})
 
     rdd = kafkaStream.map(lambda x: json.loads(x[1]))
 
-    mappedData = rdd.map(lambda x: (int(x["device_id"]),x['TimeStamp'],x["baromatric_reading"],x["gyrometer_x"], x["gyrometer_y"],x['wind_speed']))
+    mappedData = rdd.map(lambda x: (int(x["device_id"]),\
+                                        x["latitude"],\
+                                        x["longitude"],\
+                                        x["TimeStamp"],\
+                                        x["barometric_reading"],\
+                                        x["gyrometer_x"],\
+                                        x["gyrometer_y"],\
+                                        x["wind_speed"]))
 
-
-    mappedData.foreachRDD(testing)
-
-    # barometric_rdd = rdd.map(lambda x: x['baromatric_reading'])
-    # gyrox_rdd = rdd.map(lambda x: x['gyrometer_x'])
-    # gyroy_rdd = rdd.map(lambda x: x['gyrometer_y'])
-    # wind_speed_rdd = rdd.map(lambda x: x['wind_speed'])
-    #
-    # barometric_rdd.count().pprint()
+    mappedData.foreachRDD(process_drones)
 
     ssc.start()
     ssc.awaitTermination()
