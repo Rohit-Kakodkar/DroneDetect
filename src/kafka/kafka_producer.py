@@ -15,7 +15,7 @@ def parse_args():
                                 help='Total number of drones deployed')
     parser.add_argument('--broker', type=str, default= 'localhost:9092', \
                                 metavar='N', nargs = '+', help='list of brokers')
-    parse.add_argument('--topic', type=str, default='sensor-data', \
+    parser.add_argument('--topic', type=str, default='sensor-data', \
                                 help='topic of kafka cluster')
     parser.add_argument('--partition', type=int, default=0,
                                 help="partition on which this producer should send")
