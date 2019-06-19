@@ -109,7 +109,8 @@ class Generate_data():
             wind_speed = 55*np.ones(self.ndrones)
 
             # generate data for every device/drone
-            for device_id in range(n):
+            start = time.time()
+            for device_id in range(self.ndrones):
                 data = dumps({  "device_id" : device_id,
                                 "latitude" : latitude[device_id],
                                 "longitude" : longitude[device_id],
@@ -121,6 +122,7 @@ class Generate_data():
 
                 self.dataProducer.send(topic, value = data)
 
+            print(str(time.time()-start))
             self.stop_event()
 
 if __name__ == '__main__':
