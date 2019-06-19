@@ -91,8 +91,8 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
         # Time at which the drone height is lowest
 
         sorted_list = sorted(zip(TimeStamp,barometric_reading))
-        barometric_reading = [point[0] for point in sorted_list]
-        TimeStamp = [point[1] for point in sorted_list]
+        barometric_reading = [point[1] for point in sorted_list]
+        TimeStamp = [point[0] for point in sorted_list]
 
         Minimum_time = TimeStamp[np.where(barometric_reading == min(barometric_reading))]
 
@@ -107,8 +107,6 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
         # generate expected malfunctioning device data
         length_array = sliced_barometric.size
         anomalous_event, ts = get_anomalous_event(length_array)
-        # print(str(anomalous_event.size))
-        # print('******************************************************************************')
         # anomalous_event = anomalous_event[np.where((ts >= (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
         #                                             (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
 
