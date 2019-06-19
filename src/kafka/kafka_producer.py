@@ -15,6 +15,8 @@ def parse_args():
                                 help='Total number of drones deployed')
     parser.add_argument('--broker', type=str, default= 'localhost:9092', \
                                 metavar='N', nargs = '+', help='list of brokers')
+    parse.add_argument('--topic', type=str, default='sensor-data', \
+                                help='topic of kafka cluster')
     parser.add_argument('--partition', type=int, default=0,
                                 help="partition on which this producer should send")
     args = parser.parse_args()
@@ -91,7 +93,7 @@ class Generate_data():
                 self.__barometer_event_reading[i] = recovery_event(1, 1, 100, ts, 1)\
                                                     .generate_altitude()
 
-    def ProduceData(self):
+    def ProduceData(self, topic):
         """
             Produce data and sent to kafka producer
         """
@@ -117,7 +119,7 @@ class Generate_data():
                                 "gyrometer_y" : gyrometer_y[device_id],
                                 "wind_speed" : wind_speed[device_id]}).encode('utf-8')
 
-                self.dataProducer.send('sensor-data', value = data)
+                self.dataProducer.send(topic, value = data)
 
             self.stop_event()
 
@@ -127,5 +129,6 @@ if __name__ == '__main__':
     address = args.broker
     partition_id = args.partition
     n = args.number_of_devices
+    topic = args.topic
     producer = Generate_data(address, n)
-    producer.ProduceData()
+    producer.ProduceData(topic)
