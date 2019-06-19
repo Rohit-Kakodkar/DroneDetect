@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     args = parse_args()
     address = args.broker
-    print('address')
+    print(address)
     partition_id = args.partition
     n = args.number_of_devices
     producer = Generate_data(address, n)
