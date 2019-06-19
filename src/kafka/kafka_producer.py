@@ -63,7 +63,7 @@ class Generate_data():
             instantiate anomalous event
         """
         for i in range(self.ndrones):
-            if np.random.uniform(0,1) < 0.001:
+            if np.random.uniform(0,1) < 0.01:
                 self.event_log[i] = True
 
     def stop_event(self):
