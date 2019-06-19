@@ -103,6 +103,7 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
         length_array = sliced_barometric.size
         anomalous_event, ts = get_anomalous_event(length_array)
         print(str(anomalous_event.size))
+        print('******************************************************************************')
         anomalous_event = anomalous_event[np.where((ts >= (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
                                                     (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
 
