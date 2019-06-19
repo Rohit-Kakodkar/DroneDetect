@@ -139,8 +139,10 @@ def process_drones(rdd):
                                  alias('TimeStamp'))
 
         anamoly_udf = udf(detect_barometric_anamoly, BooleanType())
+        minimum_udf = udf(get_min, FloatType())
 
-        malfunctioning_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", "TimeStamp"))
+        malfunctioning_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", "TimeStamp")).\
+                                      withColumn('min', minimum_udf("barometric_reading"))
 
         malfunctioning_DF = malfunctioning_DF.drop('barometric_reading')
 
