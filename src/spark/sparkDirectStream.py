@@ -90,7 +90,9 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
     else:
         # Time at which the drone height is lowest
 
-        barometric_reading, TimeStamp = [point[0], point[1] for point in sorted(zip(TimeStamp,barometric_reading))]
+        sorted_list = sorted(zip(TimeStamp,barometric_reading))
+        barometric_reading = [point[0] for point in sorted_list]
+        TimeStamp = [point[1] for point in sorted_list]
 
         Minimum_time = TimeStamp[np.where(barometric_reading == min(barometric_reading))]
 
