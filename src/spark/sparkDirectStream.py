@@ -55,6 +55,9 @@ def quiet_logs( sc ):
     logger.LogManager.getLogger("org"). setLevel( logger.Level.ERROR )
     logger.LogManager.getLogger("akka").setLevel( logger.Level.ERROR )
 
+def get_min(barometric_reading):
+    return float(min(barometric_reading))
+
 def get_anomalous_event(length_array):
     '''
         Generate expected anomalous signal from barometric data
