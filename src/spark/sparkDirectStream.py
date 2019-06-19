@@ -132,11 +132,11 @@ def process_drones(rdd):
         df = df.selectExpr("_1 as device_id",\
                             "_2 as latitude",\
                             "_3 as longitude",\
-                            "_2 as TimeStamp",\
-                            "_3 as barometric_reading", \
-                            "_4 as gyrometer_x",\
-                            "_5 as gyrometer_y",\
-                            "_6 as wind_speed")
+                            "_4 as TimeStamp",\
+                            "_5 as barometric_reading", \
+                            "_6 as gyrometer_x",\
+                            "_7 as gyrometer_y",\
+                            "_8 as wind_speed")
 
         GroupedDF = df.groupBy("device_id").agg(f.collect_list('barometric_reading').\
                                 alias('barometric_reading'),\
