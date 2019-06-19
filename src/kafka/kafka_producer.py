@@ -14,7 +14,7 @@ def parse_args():
     parser.add_argument('--number_of_devices', type=int, default=1,\
                                 help='Total number of drones deployed')
     parser.add_argument('--broker', type=str, default= 'localhost:9092', \
-                                nargs = '+', help='list of brokers')
+                                , metavar='N', nargs = '+', help='list of brokers')
     parser.add_argument('--partition', type=int, default=0,
                                 help="partition on which this producer should send")
     args = parser.parse_args()
