@@ -130,6 +130,8 @@ def process_drones(rdd):
     else:
         df = rdd.toDF()
         df = df.selectExpr("_1 as device_id",\
+                            "_2 as latitude",\
+                            "_3 as longitude",\
                             "_2 as TimeStamp",\
                             "_3 as barometric_reading", \
                             "_4 as gyrometer_x",\
