@@ -43,7 +43,7 @@ class Generate_data():
             event_log_time = time parameter for anamalous events
             __barometer_event_reading = barometric event resulting from anomalous event
         """
-        self.dataProducer = KafkaProducer(bootstrap_servers=[address])
+        self.dataProducer = KafkaProducer(bootstrap_servers=address)
         self.ndrones = n
         self.event_log = np.zeros(n, dtype = bool)
         self.event_log_time = -5*np.ones(n)
