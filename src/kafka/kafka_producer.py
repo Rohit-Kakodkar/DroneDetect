@@ -21,6 +21,10 @@ def parse_args():
                                 help='topic of kafka cluster')
     parser.add_argument('--partition', type=int, default=0,
                                 help="partition on which this producer should send")
+    parser.add_argument('--start_id', type=int, default=0,
+                                help='ID of the first device in the list')
+    parser.add_argument('--faulty', type=bool, default=False,
+                                help='Is this a stream from faulty devices')
     args = parser.parse_args()
 
     return args
@@ -57,7 +61,7 @@ class Generate_data():
             instantiate anomalous event
         """
         for i in range(self.ndrones):
-            if np.random.uniform(0,1) < 0.01:
+            if np.random.uniform(0,1) < 0.1:
                 self.event_log[i] = True
 
     def stop_event(self):
@@ -87,7 +91,7 @@ class Generate_data():
                 self.__barometer_event_reading[i] = recovery_event(0, 1, 100, ts, 1)\
                                                     .generate_altitude()
 
-    def ProduceData(self, topic):
+    def ProduceData(self, topic, faulty, start_id):
         """
             Produce data and sent to kafka producer
         """
@@ -96,7 +100,10 @@ class Generate_data():
         while True:
             self.generate_event()
             # baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
-            baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
+            if faulty:
+                baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
+            else:
+                baromatric_reading = np.random.uniform(395, 405, self.ndrones)
             latitude = np.zeros(self.ndrones)
             longitude = np.zeros(self.ndrones)
             gyrometer_x = np.random.uniform(-0.4, 0.4, self.ndrones)
@@ -106,7 +113,7 @@ class Generate_data():
             # generate data for every device/drone
             start = time.time()
             for device_id in range(self.ndrones):
-                data = dumps({  "device_id" : device_id,
+                data = dumps({  "device_id" : device_id+start_id,
                                 "latitude" : latitude[device_id],
                                 "longitude" : longitude[device_id],
                                 "barometric_reading" : baromatric_reading[device_id],
@@ -127,5 +134,7 @@ if __name__ == '__main__':
     partition_id = args.partition
     n = args.number_of_devices
     topic = args.topic
+    faulty = args.faulty
+    start_id = args.start_id
     producer = Generate_data(address, n)
     producer.ProduceData(topic)
