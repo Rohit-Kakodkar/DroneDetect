@@ -69,9 +69,9 @@ class Generate_data():
             Stop anamalous event
         """
         for i in range(self.ndrones):
-            if self.event_log[i] and self.event_log_time[i]>=20:
+            if self.event_log[i] and self.event_log_time[i]>=-15:
                 self.event_log[i] = False
-                self.event_log_time[i] = -20
+                self.event_log_time[i] = -15
 
     def update_time_log(self):
         dt = 0.1
