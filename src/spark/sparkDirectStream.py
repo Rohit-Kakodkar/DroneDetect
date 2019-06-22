@@ -152,23 +152,40 @@ def process_drones(rdd):
 
         GroupedDF = df.groupBy("device_id").agg(f.collect_list('barometric_reading').\
                                 alias('barometric_reading'),\
-                                 f.collect_list('TimeStamp').\
-                                 alias('TimeStamp'))
+                                f.collect_list('latitude').\
+                                alias('latitude'),\
+                                f.collect_list('longitude').\
+                                alias('longitude'),\
+                                f.collect_list('gyrometer_x').\
+                                alias('gyrometer_x'),\
+                                f.collect_list('gyrometer_y').\
+                                alias('gyrometer_y'),\
+                                f.collect_list('wind_speed').\
+                                alias('wind_speed'),\
+                                f.collect_list('TimeStamp').\
+                                alias('TimeStamp'))
 
         anamoly_udf = udf(detect_barometric_anamoly, BooleanType())
         minimum_udf = udf(get_min, FloatType())
 
-        malfunctioning_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", "TimeStamp")).\
-                                      withColumn('min', minimum_udf("barometric_reading"))
+        processed_DF = GroupedDF.withColumn("malfunctioning", \
+                                            anamoly_udf("barometric_reading", \
+                                                        "TimeStamp"))
 
-        malfunctioning_DF = malfunctioning_DF.drop('barometric_reading')
-        malfunctioning_DF = malfunctioning_DF.drop('TimeStamp')
-        malfunctioning_DF = malfunctioning_DF.drop('min')
+        malfunctioning_DF = processed_DF.filter(processed_DF['malfunctioning'])
 
-        # malfunctioning_DF.show()
+        malfunctioning_DF.show()
 
-        connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
-        connector.write(malfunctioning_DF, 'devices', 'overwrite')
+        processed_DF = processed_DF.drop('barometric_reading')
+        processed_DF = processed_DF.drop('latitude')
+        processed_DF = processed_DF.drop('longitude')
+        processed_DF = processed_DF.drop('gyrometer_x')
+        processed_DF = processed_DF.drop('gyrometer_y')
+        processed_DF = processed_DF.drop('wind_speed')
+        processed_DF = processed_DF.drop('TimeStamp')
+
+        # connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
+        # connector.write(processed_DF, 'devices', 'overwrite')
 
 if __name__ == '__main__':
     '''
