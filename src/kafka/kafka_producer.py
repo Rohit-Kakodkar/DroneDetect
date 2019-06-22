@@ -57,7 +57,7 @@ class Generate_data():
             instantiate anomalous event
         """
         for i in range(self.ndrones):
-            if np.random.uniform(0,1) < 0.0005:
+            if np.random.uniform(0,1) < 0.01:
                 self.event_log[i] = True
 
     def stop_event(self):
@@ -65,9 +65,9 @@ class Generate_data():
             Stop anamalous event
         """
         for i in range(self.ndrones):
-            if self.event_log[i] and self.event_log_time[i]>=10:
+            if self.event_log[i] and self.event_log_time[i]>=20:
                 self.event_log[i] = False
-                self.event_log_time[i] = -10
+                self.event_log_time[i] = -20
 
     def update_time_log(self):
         dt = 0.1
