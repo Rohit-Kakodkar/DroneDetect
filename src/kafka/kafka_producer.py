@@ -137,4 +137,4 @@ if __name__ == '__main__':
     faulty = args.faulty
     start_id = args.start_id
     producer = Generate_data(address, n)
-    producer.ProduceData(topic)
+    producer.ProduceData(topic, faulty, start_id)
