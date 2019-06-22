@@ -124,7 +124,7 @@ class Generate_data():
 
                 self.dataProducer.send(topic, value = data)
 
-            sleep(0.11-(time.time()-start))
+            sleep(0.1-(time.time()-start))
             print(str(time.time()-start))
             self.stop_event()
 
