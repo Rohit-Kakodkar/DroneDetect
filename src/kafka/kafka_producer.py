@@ -7,6 +7,8 @@ from kafka import KafkaProducer
 import numpy as np
 import time
 import argparse
+from time import sleep
+import pandas
 
 def parse_args():
 
@@ -27,14 +29,6 @@ class Generate_data():
     """
         Class to simulate sensor data
             output : kafka dump of json
-                    {
-                        "Location" - has not added yet
-                        "time" - TimeStamp
-                        "barometric reading"
-                        "gyroscope reading x" - rotation around x-axis
-                        "gyroscope reading y" - rotation around y-axis
-                        "Wind speed"
-                        }
     """
 
     def __init__(self, address, n):
@@ -48,7 +42,7 @@ class Generate_data():
         self.dataProducer = KafkaProducer(bootstrap_servers=address)
         self.ndrones = n
         self.event_log = np.zeros(n, dtype = bool)
-        self.event_log_time = -5*np.ones(n)
+        self.event_log_time = -10*np.ones(n)
         self.__barometer_event_reading = np.zeros(n)
 
     def Serialize_JSON(self):
@@ -71,9 +65,9 @@ class Generate_data():
             Stop anamalous event
         """
         for i in range(self.ndrones):
-            if self.event_log[i] and self.event_log_time[i]>=5:
+            if self.event_log[i] and self.event_log_time[i]>=10:
                 self.event_log[i] = False
-                self.event_log_time[i] = -5
+                self.event_log_time[i] = -10
 
     def update_time_log(self):
         dt = 0.1
@@ -90,7 +84,7 @@ class Generate_data():
         for i in range(self.ndrones):
             if self.event_log[i]:
                 ts = self.event_log_time[i]
-                self.__barometer_event_reading[i] = recovery_event(1, 1, 100, ts, 1)\
+                self.__barometer_event_reading[i] = recovery_event(0, 1, 100, ts, 1)\
                                                     .generate_altitude()
 
     def ProduceData(self, topic):
@@ -101,6 +95,7 @@ class Generate_data():
         print(self.TimeStamp)
         while True:
             self.generate_event()
+            # baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
             baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
             latitude = np.zeros(self.ndrones)
             longitude = np.zeros(self.ndrones)
@@ -121,6 +116,7 @@ class Generate_data():
                                 "wind_speed" : wind_speed[device_id]}).encode('utf-8')
 
                 self.dataProducer.send(topic, value = data)
+            sleep(0.05)
 
             print(str(time.time()-start))
             self.stop_event()

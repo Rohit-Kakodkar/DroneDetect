@@ -13,6 +13,9 @@ import numpy as np
 import scipy.stats as stats
 import math
 import pgConnector
+import matplotlib.pyplot as plt
+from time import sleep
+from scipy import interpolate
 
 def parse_args():
     '''
@@ -63,10 +66,10 @@ def get_anomalous_event(length_array):
         Generate expected anomalous signal from barometric data
     '''
     ts = np.linspace(-10, 10, length_array)
-    speed = 1
-    mu = 1
+    speed = 2
+    mu = 0
     variance = 1
-    sigma = np.sqrt(variance)
+    sigma = math.sqrt(variance)
     drop = 100
     y_ideal=[]
     for t in ts:
@@ -98,6 +101,7 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
         TimeStamp = TimeStamp[sorted_TimeStamp]
 
         Minimum_time = TimeStamp[np.where(barometric_reading == np.amin(barometric_reading))]
+        Mid_time = TimeStamp[int(TimeStamp.size/2)]
 
         # Define window size that you wanna pick out the data
         # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
@@ -108,15 +112,23 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
                                             (TimeStamp < (Minimum_time + Window_Size_Secs)))]
 
         # generate expected malfunctioning device data
-        length_array = sliced_barometric.size
+        length_array = TimeStamp[np.where((TimeStamp > (Mid_time - Window_Size_Secs)) & \
+                                            (TimeStamp < (Mid_time + Window_Size_Secs)))].size
         anomalous_event, ts = get_anomalous_event(length_array)
-        # anomalous_event = anomalous_event[np.where((ts >= (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
-        #                                             (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
+        sliced_anomalous = anomalous_event[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
+                                                     (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
+        sliced_ts = ts[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
+                                                     (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
 
-        Error = RMSE(sliced_barometric, anomalous_event)
+        f = interpolate.interp1d(np.linspace(0,1,len(sliced_anomalous)), sliced_anomalous)
+
+        x = np.linspace(0, 1, sliced_barometric.size)
+        compare_anomalous = f(x)
+
+        Error = RMSE((sliced_barometric), compare_anomalous)
 
         # return float(Error)
-        if Error < 20:
+        if Error < 3.2:
             return True
         else:
             return False
