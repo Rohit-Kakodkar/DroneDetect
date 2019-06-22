@@ -2,12 +2,12 @@ from pyspark.sql import DataFrameWriter
 import os
 
 class PostgresConnector(object):
-    def __init__(self):
-        self.database_name = 'DroneDetect'
-        self.hostname = 'HOST_NAME'
+    def __init__(self, hostname, dbname, pusername, password):
+        self.database_name = dbname
+        self.hostname = hostname
         self.url_connect = "jdbc:postgresql://{hostname}:5432/{db}".format(hostname=self.hostname, db=self.database_name)
-        self.properties = {"user":"POSTGRES_USER",
-                      "password" : "POSTGER_PASS",
+        self.properties = {"user":pusername,
+                      "password" :password,
                       "driver": "org.postgresql.Driver"
                      }
     def get_writer(self, df):

@@ -16,24 +16,23 @@ import pgConnector
 from time import sleep
 from scipy import interpolate
 
-def parse_args():
-    '''
-        Argument parser
-    '''
+parser = ArgumentParser(description = 'DroneDetect')
+parser.add_argument('--broker', default='localhost:9092',\
+                            help = 'List all kafka brokers')
+parser.add_argument('--topic', default='sensor-data', \
+                            help = 'Topic to which spark is subscribed to')
+parser.add_argument('--psnode', default='localhost:5432',\
+                            help = 'Location of postgres database')
+parser.add_argument('--dbname', default='dronedetect', \
+                            help = 'Name of the postgres database')
+parser.add_argument('--pusername', default='default',
+                            help = 'Your postgres username')
+parser.add_argument('--password', default='password',
+                            help = 'postgres password')
+parser.add_argument('--spark_master', default='localhost', \
+                            help = 'Name of master spark node')
+args = parser.parse_args()
 
-    parser = ArgumentParser(description = 'DroneDetect')
-    parser.add_argument('--broker', default='localhost:9092',\
-                                help = 'List all kafka brokers')
-    parser.add_argument('--topic', default='sensor-data', \
-                                help = 'Topic to which spark is subscribed to')
-    # parser.add_argument('--psnode', default='localhost:5432',\
-    #                             help = 'Location of postgres database')
-    # parser.add_argument('--dbname', default='dronedetect', \
-    #                             help = 'Name of the postgres database')
-    parser.add_argument('--spark_master', default='localhost', \
-                                help = 'Name of master spark node')
-    args = parser.parse_args()
-    return args
 
 def spark_conf(master):
     '''
@@ -163,18 +162,17 @@ def process_drones(rdd):
 
         malfunctioning_DF = malfunctioning_DF.drop('barometric_reading')
         malfunctioning_DF = malfunctioning_DF.drop('TimeStamp')
+        malfunctioning_DF = malfunctioning_DF.drop('min')
 
         malfunctioning_DF.show()
 
-        # connector = PostgresConnector()
+        # connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
         # connector.write(malfunctioning_DF, devices, 'overwrite')
 
 if __name__ == '__main__':
     '''
         Main function to launch spark job
     '''
-
-    args = parse_args()
     broker = args.broker
     topic = args.topic
     master = args.spark_master
