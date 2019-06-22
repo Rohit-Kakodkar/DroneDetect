@@ -15,6 +15,7 @@ import math
 import pgConnector
 from time import sleep
 from scipy import interpolate
+from pgConnector import PostgresConnector
 
 parser = ArgumentParser(description = 'DroneDetect')
 parser.add_argument('--broker', default='localhost:9092',\
