@@ -91,7 +91,7 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
     TimeStamp = np.asarray(TimeStamp)
 
     if np.amin(barometric_reading)>370:
-        return float(0.0)
+        return False
     else:
         # Time at which the drone height is lowest
 
@@ -126,11 +126,11 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
 
         Error = RMSE((sliced_barometric), compare_anomalous)
 
-        return float(Error)
-        # if Error < 3.2:
-        #     return True
-        # else:
-        #     return False
+        # return float(Error)
+        if Error < 10:
+            return True
+        else:
+            return False
 
 def process_drones(rdd):
     '''
@@ -155,7 +155,7 @@ def process_drones(rdd):
                                  f.collect_list('TimeStamp').\
                                  alias('TimeStamp'))
 
-        anamoly_udf = udf(detect_barometric_anamoly, FloatType())
+        anamoly_udf = udf(detect_barometric_anamoly, BooleanType())
         minimum_udf = udf(get_min, FloatType())
 
         malfunctioning_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", "TimeStamp")).\
