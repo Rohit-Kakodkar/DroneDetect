@@ -13,7 +13,6 @@ import numpy as np
 import scipy.stats as stats
 import math
 import pgConnector
-import matplotlib.pyplot as plt
 from time import sleep
 from scipy import interpolate
 
