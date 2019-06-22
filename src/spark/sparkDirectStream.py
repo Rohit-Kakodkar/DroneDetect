@@ -164,10 +164,10 @@ def process_drones(rdd):
         malfunctioning_DF = malfunctioning_DF.drop('TimeStamp')
         malfunctioning_DF = malfunctioning_DF.drop('min')
 
-        malfunctioning_DF.show()
+        # malfunctioning_DF.show()
 
-        # connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
-        # connector.write(malfunctioning_DF, devices, 'overwrite')
+        connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
+        connector.write(malfunctioning_DF, devices, 'overwrite')
 
 if __name__ == '__main__':
     '''
