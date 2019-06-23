@@ -46,7 +46,7 @@ class Generate_data():
         self.dataProducer = KafkaProducer(bootstrap_servers=address)
         self.ndrones = n
         self.event_log = np.zeros(n, dtype = bool)
-        self.event_log_time = -10*np.ones(n)
+        self.event_log_time = -20*np.ones(n)
         self.__barometer_event_reading = np.zeros(n)
 
     def Serialize_JSON(self):
@@ -69,9 +69,9 @@ class Generate_data():
             Stop anamalous event
         """
         for i in range(self.ndrones):
-            if self.event_log[i] and self.event_log_time[i]>=-15:
+            if self.event_log[i] and self.event_log_time[i]>=20:
                 self.event_log[i] = False
-                self.event_log_time[i] = -15
+                self.event_log_time[i] = -20
 
     def update_time_log(self):
         dt = 0.1
@@ -124,7 +124,9 @@ class Generate_data():
 
                 self.dataProducer.send(topic, value = data)
 
-            sleep(0.1-(time.time()-start))
+            if 0.1-(time.time()-start)>0:
+                sleep(0.1-(time.time()-start))
+
             print(str(time.time()-start))
             self.stop_event()
 

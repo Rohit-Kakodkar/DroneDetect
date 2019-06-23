@@ -89,6 +89,7 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
     '''
     barometric_reading = np.asarray(barometric_reading)
     TimeStamp = np.asarray(TimeStamp)
+    s3_bucket='s3a://drone_detect_data'
 
     if np.amin(barometric_reading)>370:
         return False
@@ -168,13 +169,21 @@ def process_drones(rdd):
         anamoly_udf = udf(detect_barometric_anamoly, BooleanType())
         minimum_udf = udf(get_min, FloatType())
 
-        processed_DF = GroupedDF.withColumn("malfunctioning", \
-                                            anamoly_udf("barometric_reading", \
-                                                        "TimeStamp"))
+        processed_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", \
+                                                                            "TimeStamp"))
 
         malfunctioning_DF = processed_DF.filter(processed_DF['malfunctioning'])
 
-        malfunctioning_DF.show()
+        Total_number = malfunctioning_DF.count()
+
+        malfunctioning_DF.coalesce(2)\
+                         .write\
+                         .mode('append')\
+                         .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format{s3_bucket})
+
+        print('Total Number of partitions = {}'.format(malfunctioning_DF.rdd.getNumPartitions()))
+
+        print('Total number of malfunctioning = {}'.format(Total_number))
 
         processed_DF = processed_DF.drop('barometric_reading')
         processed_DF = processed_DF.drop('latitude')
