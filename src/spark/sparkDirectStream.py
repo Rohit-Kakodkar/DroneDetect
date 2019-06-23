@@ -140,7 +140,7 @@ def process_drones(rdd):
     if rdd.isEmpty():
 	       print("RDD is empty")
     else:
-        s3_bucket='s3a://drone_detect_data'
+        s3_bucket='s3a://dronesensordata/drone_detect_data'
         df = rdd.toDF()
         df = df.selectExpr("_1 as device_id",\
                             "_2 as latitude",\
