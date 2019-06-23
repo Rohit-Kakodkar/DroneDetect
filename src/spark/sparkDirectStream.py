@@ -48,7 +48,6 @@ def spark_conf(master):
     sc_conf.set("spark.executor.cores", "2")
     sc_conf.set("spark.executor.instances", "15")
     sc_conf.set("spark.driver.memory", "5000m")
-    sc_conf.set("spark.executor.heartbeatInterval", "20")
 
     return sc_conf
 
