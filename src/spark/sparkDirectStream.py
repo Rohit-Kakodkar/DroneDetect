@@ -89,7 +89,6 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
     '''
     barometric_reading = np.asarray(barometric_reading)
     TimeStamp = np.asarray(TimeStamp)
-    s3_bucket='s3a://drone_detect_data'
 
     if np.amin(barometric_reading)>370:
         return False
@@ -141,6 +140,7 @@ def process_drones(rdd):
     if rdd.isEmpty():
 	       print("RDD is empty")
     else:
+        s3_bucket='s3a://drone_detect_data'
         df = rdd.toDF()
         df = df.selectExpr("_1 as device_id",\
                             "_2 as latitude",\
