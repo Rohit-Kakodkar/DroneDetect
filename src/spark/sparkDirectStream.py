@@ -179,7 +179,7 @@ def process_drones(rdd):
         malfunctioning_DF.coalesce(2)\
                          .write\
                          .mode('append')\
-                         .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format{s3_bucket})
+                         .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
 
         print('Total Number of partitions = {}'.format(malfunctioning_DF.rdd.getNumPartitions()))
 
