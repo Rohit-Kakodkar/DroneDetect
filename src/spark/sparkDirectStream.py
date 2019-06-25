@@ -90,9 +90,11 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
     TimeStamp = np.asarray(TimeStamp)
 
     if np.amin(barometric_reading)>370:
-        return False
+        return float(0.0)
+        # return False
     elif np.amin(barometric_reading)<0:
-        return False
+        return float(0.0)
+        # return False
     else :
         # Time at which the drone height is lowest
 
@@ -128,10 +130,10 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
         Error = RMSE((sliced_barometric), compare_anomalous)
 
         # return float(Error)
-        if Error < 10:
-            return True
-        else:
-            return False
+        # if Error < 10:
+        #     return True
+        # else:
+        #     return False
 
 def detect_crashed_drones(baromatric_reading):
     """
@@ -177,7 +179,7 @@ def process_drones(rdd):
                                 f.collect_list('TimeStamp').\
                                 alias('TimeStamp'))
 
-        anamoly_udf = udf(detect_barometric_anamoly, BooleanType())
+        anamoly_udf = udf(detect_barometric_anamoly, FloatType())
         crashed_udf = udf(detect_crashed_drones, BooleanType())
         minimum_udf = udf(get_min, FloatType())
 
@@ -185,9 +187,9 @@ def process_drones(rdd):
                                                                             "TimeStamp")) \
                                 .withColumn("crashed", crashed_udf("barometric_reading"))
 
-        crashed_DF = processed_DF.filter(processed_DF['malfunctioning'])
+        # crashed_DF = processed_DF.filter(processed_DF['malfunctioning'])
 
-        crashed_DF.show()
+        processed_DF.show()
 
         Total_number = crashed_DF.count()
 
@@ -196,9 +198,9 @@ def process_drones(rdd):
         #                  .mode('append')\
         #                  .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
 
-        print('Total Number of partitions = {}'.format(crashed_DF.rdd.getNumPartitions()))
-
-        print('Total number of malfunctioning = {}'.format(Total_number))
+        # print('Total Number of partitions = {}'.format(crashed_DF.rdd.getNumPartitions()))
+        #
+        # print('Total number of malfunctioning = {}'.format(Total_number))
 
         processed_DF = processed_DF.drop('barometric_reading')
         processed_DF = processed_DF.drop('latitude')

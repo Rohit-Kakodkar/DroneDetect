@@ -117,10 +117,14 @@ class Generate_data():
         self.TimeStamp = datetime.now()
         print(self.TimeStamp)
         while True:
+
+            
             if faulty:
                 self.generate_event()
             elif crashed:
                 self.crashed_event()
+
+
             # baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
             if faulty:
                 baromatric_reading = np.random.randint(low = 395, high = 405, size = self.ndrones) + self.__barometer_event_reading
@@ -128,6 +132,8 @@ class Generate_data():
                 baromatric_reading = self.__crashed_barometric_data
             else:
                 baromatric_reading = np.random.randint(low = 395, high = 405, size = self.ndrones)
+
+
             latitude = np.zeros(self.ndrones)
             longitude = np.zeros(self.ndrones)
             gyrometer_x = np.random.uniform(-0.4, 0.4, self.ndrones)
