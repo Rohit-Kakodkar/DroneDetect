@@ -108,7 +108,7 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
         # Define window size that you wanna pick out the data
         # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
         Window_Size_Secs = 10
-        print(str(barometric.size))
+        print(str(barometric_reading.size))
         print(str(TimeStamp.size))
         sliced_barometric = barometric_reading[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
                                                          (TimeStamp < (Minimum_time + Window_Size_Secs)))]
