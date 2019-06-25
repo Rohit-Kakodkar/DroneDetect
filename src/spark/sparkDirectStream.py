@@ -191,7 +191,7 @@ def process_drones(rdd):
 
         processed_DF.show()
 
-        Total_number = crashed_DF.count()
+        # Total_number = crashed_DF.count()
 
         # malfunctioning_DF.coalesce(2)\
         #                  .write\
