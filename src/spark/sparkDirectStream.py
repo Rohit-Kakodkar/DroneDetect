@@ -190,10 +190,13 @@ def process_drones(rdd):
 
         processed_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", \
                                                                             "TimeStamp")) \
-                                .withColumn("crashed", crashed_udf("barometric_reading"))
+                                .withColumn("crashed", crashed_udf("barometric_reading"))\
+                                .withColumn("min", minimum_udf("barometric_reading"))
+
         malfunctioning_DF = processed_DF.filter(processed_DF['malfunctioning'])
         crashed_DF = processed_DF.filter(processed_DF['crashed'])
 
+        malfunctioning_DF.show()
         print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
         print('Total number of crashed drones = {}'.format(crashed_DF.count()))
 
