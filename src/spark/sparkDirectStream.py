@@ -108,6 +108,8 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
         # Define window size that you wanna pick out the data
         # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
         Window_Size_Secs = 10
+        print(str(barometric.size))
+        print(str(TimeStamp.size))
         sliced_barometric = barometric_reading[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
                                                          (TimeStamp < (Minimum_time + Window_Size_Secs)))]
         sliced_TimeStamp = TimeStamp[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
@@ -185,7 +187,7 @@ def process_drones(rdd):
 
         processed_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", \
                                                                             "TimeStamp")) \
-                                .withColumn("crashed", crashed_udf("barometric_reading")) \
+                                .withColumn("crashed", crashed_udf("barometric_reading"))
                                 .withColumn("min", minimum_udf("barometric_reading"))
 
         # crashed_DF = processed_DF.filter(processed_DF['malfunctioning'])
