@@ -91,7 +91,9 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
 
     if np.amin(barometric_reading)>370:
         return False
-    else:
+    elif np.amin(barometric_reading)<0:
+        return False
+    else :
         # Time at which the drone height is lowest
 
         sorted_TimeStamp = TimeStamp.argsort()
@@ -131,6 +133,16 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
         else:
             return False
 
+def detect_crashed_drones(baromatric_reading):
+    """
+        Function to detect crashed drones
+    """
+
+    if np.amin(baromatric_reading) < 0:
+        return True
+    else :
+        return False
+
 def process_drones(rdd):
     '''
         Driver function to process drone rdd's and select sensor data close to the event
@@ -166,21 +178,25 @@ def process_drones(rdd):
                                 alias('TimeStamp'))
 
         anamoly_udf = udf(detect_barometric_anamoly, BooleanType())
+        crashed_udf = udf(detect_crashed_drones, BooleanType())
         minimum_udf = udf(get_min, FloatType())
 
         processed_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", \
-                                                                            "TimeStamp"))
+                                                                            "TimeStamp")) \
+                                .withColumn("crashed", crashed_udf("barometric_reading"))
 
-        malfunctioning_DF = processed_DF.filter(processed_DF['malfunctioning'])
+        crashed_DF = processed_DF.filter(processed_DF['crashed'])
 
-        Total_number = malfunctioning_DF.count()
+        crashed_DF.show()
 
-        malfunctioning_DF.coalesce(2)\
-                         .write\
-                         .mode('append')\
-                         .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
+        Total_number = crashed_DF.count()
 
-        print('Total Number of partitions = {}'.format(malfunctioning_DF.rdd.getNumPartitions()))
+        # malfunctioning_DF.coalesce(2)\
+        #                  .write\
+        #                  .mode('append')\
+        #                  .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
+
+        print('Total Number of partitions = {}'.format(crashed_DF.rdd.getNumPartitions()))
 
         print('Total number of malfunctioning = {}'.format(Total_number))
 

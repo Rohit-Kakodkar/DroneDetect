@@ -25,6 +25,8 @@ def parse_args():
                                 help='ID of the first device in the list')
     parser.add_argument('--faulty', type=bool, default=False,
                                 help='Is this a stream from faulty devices')
+    parser.add_argument('--crashed', type = bool, default=False,
+                                help='Is this stream for crashed devices')
     args = parser.parse_args()
 
     return args
@@ -46,6 +48,8 @@ class Generate_data():
         self.dataProducer = KafkaProducer(bootstrap_servers=address)
         self.ndrones = n
         self.event_log = np.zeros(n, dtype = bool)
+        self.__crashed_event_log = np.zeros(n, dtype = bool)
+        self.__crashed_barometric_data = np.zeros(n)
         self.event_log_time = -20*np.ones(n)
         self.__barometer_event_reading = np.zeros(n)
 
@@ -91,19 +95,39 @@ class Generate_data():
                 self.__barometer_event_reading[i] = recovery_event(0, 1, 100, ts, 1)\
                                                     .generate_altitude()
 
-    def ProduceData(self, topic, faulty, start_id):
+    def crashed_event(self):
+        """
+            Generate data from crashed drones
+        """
+
+        for i in range(self.ndrones):
+            if (np.random.rand() < 0.0001) & (not self.__crashed_event_log[i]):
+                self.__crashed_event_log[i] = True
+
+        for i in range(self.ndrones):
+            if self.__crashed_event_log[i]:
+                self.__crashed_barometric_data[i] = -1
+            else :
+                self.__crashed_barometric_data[i] = np.random.randint(low = 395, high = 405)
+
+    def ProduceData(self, topic, faulty, crashed, start_id):
         """
             Produce data and sent to kafka producer
         """
         self.TimeStamp = datetime.now()
         print(self.TimeStamp)
         while True:
-            self.generate_event()
+            if faulty:
+                self.generate_event()
+            elif crashed:
+                self.crashed_event()
             # baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
             if faulty:
-                baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
+                baromatric_reading = np.random.randint(low = 395, high = 405, size = self.ndrones) + self.__barometer_event_reading
+            elif crashed:
+                baromatric_reading = self.__crashed_barometric_data
             else:
-                baromatric_reading = np.random.uniform(395, 405, self.ndrones)
+                baromatric_reading = np.random.randint(low = 395, high = 405, size = self.ndrones)
             latitude = np.zeros(self.ndrones)
             longitude = np.zeros(self.ndrones)
             gyrometer_x = np.random.uniform(-0.4, 0.4, self.ndrones)
@@ -138,6 +162,7 @@ if __name__ == '__main__':
     n = args.number_of_devices
     topic = args.topic
     faulty = args.faulty
+    crashed = args.crashed
     start_id = args.start_id
     producer = Generate_data(address, n)
-    producer.ProduceData(topic, faulty, start_id)
+    producer.ProduceData(topic, faulty, crashed, start_id)
