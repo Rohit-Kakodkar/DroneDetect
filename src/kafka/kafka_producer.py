@@ -35,7 +35,7 @@ def parse_args():
                                 help='ID of the first device in the list')
     parser.add_argument('--faulty', type=str2bool, default=False,
                                 help='Is this a stream from faulty devices')
-    parser.add_argument('--crashed', type =type=str2bool, default=False,
+    parser.add_argument('--crashed', type=str2bool, default=False,
                                 help='Is this stream for crashed devices')
     args = parser.parse_args()
 
