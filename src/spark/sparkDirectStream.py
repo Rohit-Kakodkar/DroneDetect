@@ -96,44 +96,44 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
             return False
             # return False
         else :
-    # Time at which the drone height is lowest
-        sorted_TimeStamp = TimeStamp.argsort()
-        barometric_reading = barometric_reading[sorted_TimeStamp]
-        TimeStamp = TimeStamp[sorted_TimeStamp]
+        # Time at which the drone height is lowest
+            sorted_TimeStamp = TimeStamp.argsort()
+            barometric_reading = barometric_reading[sorted_TimeStamp]
+            TimeStamp = TimeStamp[sorted_TimeStamp]
 
-        Minimum_time = TimeStamp[np.where(barometric_reading == np.amin(barometric_reading))]
-        Mid_time = TimeStamp[int(TimeStamp.size/2)]
+            Minimum_time = TimeStamp[np.where(barometric_reading == np.amin(barometric_reading))]
+            Mid_time = TimeStamp[int(TimeStamp.size/2)]
 
-        # Define window size that you wanna pick out the data
-        # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
-        Window_Size_Secs = 10
-        print(str(barometric_reading.size))
-        print(str(TimeStamp.size))
-        sliced_barometric = barometric_reading[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
-                                                         (TimeStamp < (Minimum_time + Window_Size_Secs)))]
-        sliced_TimeStamp = TimeStamp[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
-                                            (TimeStamp < (Minimum_time + Window_Size_Secs)))]
+            # Define window size that you wanna pick out the data
+            # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
+            Window_Size_Secs = 10
+            print(str(barometric_reading.size))
+            print(str(TimeStamp.size))
+            sliced_barometric = barometric_reading[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
+                                                             (TimeStamp < (Minimum_time + Window_Size_Secs)))]
+            sliced_TimeStamp = TimeStamp[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
+                                                (TimeStamp < (Minimum_time + Window_Size_Secs)))]
 
-        # generate expected malfunctioning device data
-        length_array = TimeStamp[np.where((TimeStamp > (Mid_time - Window_Size_Secs)) & \
-                                            (TimeStamp < (Mid_time + Window_Size_Secs)))].size
-        anomalous_event, ts = get_anomalous_event(length_array)
-        sliced_anomalous = anomalous_event[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
-                                                     (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
-        sliced_ts = ts[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
-                                                     (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
+            # generate expected malfunctioning device data
+            length_array = TimeStamp[np.where((TimeStamp > (Mid_time - Window_Size_Secs)) & \
+                                                (TimeStamp < (Mid_time + Window_Size_Secs)))].size
+            anomalous_event, ts = get_anomalous_event(length_array)
+            sliced_anomalous = anomalous_event[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
+                                                         (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
+            sliced_ts = ts[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
+                                                         (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
 
-        f = interpolate.interp1d(np.linspace(0,1,len(sliced_anomalous)), sliced_anomalous)
+            f = interpolate.interp1d(np.linspace(0,1,len(sliced_anomalous)), sliced_anomalous)
 
-        x = np.linspace(0, 1, sliced_barometric.size)
-        compare_anomalous = f(x)
+            x = np.linspace(0, 1, sliced_barometric.size)
+            compare_anomalous = f(x)
 
-        Error = RMSE((sliced_barometric), compare_anomalous)
+            Error = RMSE((sliced_barometric), compare_anomalous)
 
-        if Error < 11:
-            return True
-        else:
-            return False
+            if Error < 11:
+                return True
+            else:
+                return False
 
     except ValueError:
         return False
