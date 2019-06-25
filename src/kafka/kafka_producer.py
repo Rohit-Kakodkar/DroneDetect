@@ -127,7 +127,7 @@ class Generate_data():
 
             # baromatric_reading = np.random.uniform(395, 405, self.ndrones) + self.__barometer_event_reading
             if faulty:
-                print('Hello')
+                print(str(faulty))
                 baromatric_reading = np.random.randint(low = 395, high = 405, size = self.ndrones) + self.__barometer_event_reading
             elif crashed:
                 baromatric_reading = self.__crashed_barometric_data
