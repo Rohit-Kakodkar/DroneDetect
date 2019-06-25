@@ -107,8 +107,6 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
             # Define window size that you wanna pick out the data
             # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
             Window_Size_Secs = 10
-            print(str(barometric_reading.size))
-            print(str(TimeStamp.size))
             sliced_barometric = barometric_reading[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
                                                              (TimeStamp < (Minimum_time + Window_Size_Secs)))]
             sliced_TimeStamp = TimeStamp[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
@@ -142,10 +140,12 @@ def detect_crashed_drones(baromatric_reading):
     """
         Function to detect crashed drones
     """
-
-    if np.amin(baromatric_reading) < 0:
-        return True
-    else :
+    try:
+        if np.amin(baromatric_reading) < 0:
+            return True
+        else :
+            return False
+    except ValueError:
         return False
 
 def process_drones(rdd):
