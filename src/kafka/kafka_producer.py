@@ -168,7 +168,7 @@ class Generate_data():
             if 0.1-(time.time()-start)>0:
                 sleep(0.1-(time.time()-start))
 
-            # print(str(time.time()-start))
+            print(str(time.time()-start))
             self.stop_event()
 
 if __name__ == '__main__':
@@ -181,6 +181,5 @@ if __name__ == '__main__':
     faulty = args.faulty
     crashed = args.crashed
     start_id = args.start_id
-    print(str(faulty))
     producer = Generate_data(address, n)
     producer.ProduceData(topic, faulty, crashed, start_id)
