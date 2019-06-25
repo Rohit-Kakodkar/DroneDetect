@@ -129,7 +129,7 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
 
         Error = RMSE((sliced_barometric), compare_anomalous)
 
-        # return float(Error)
+        return float(Error)
         # if Error < 10:
         #     return True
         # else:
@@ -185,7 +185,8 @@ def process_drones(rdd):
 
         processed_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", \
                                                                             "TimeStamp")) \
-                                .withColumn("crashed", crashed_udf("barometric_reading"))
+                                .withColumn("crashed", crashed_udf("barometric_reading")) \
+                                .withColumn("min", minimum_udf("barometric_reading"))
 
         # crashed_DF = processed_DF.filter(processed_DF['malfunctioning'])
 
