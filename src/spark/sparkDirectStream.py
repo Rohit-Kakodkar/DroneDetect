@@ -196,14 +196,14 @@ def process_drones(rdd):
         malfunctioning_DF = processed_DF.filter(processed_DF['malfunctioning'])
         crashed_DF = processed_DF.filter(processed_DF['crashed'])
 
-        malfunctioning_DF.show()
-        print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
-        print('Total number of crashed drones = {}'.format(crashed_DF.count()))
+        # malfunctioning_DF.show()
+        # print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
+        # print('Total number of crashed drones = {}'.format(crashed_DF.count()))
 
-        # malfunctioning_DF.coalesce(2)\
-        #                  .write\
-        #                  .mode('append')\
-        #                  .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
+        malfunctioning_DF.coalesce(2)\
+                         .write\
+                         .mode('append')\
+                         .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
 
         processed_DF = processed_DF.drop('barometric_reading')
         processed_DF = processed_DF.drop('latitude')
