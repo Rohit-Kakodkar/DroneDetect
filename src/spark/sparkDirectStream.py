@@ -193,20 +193,16 @@ def process_drones(rdd):
                                 .withColumn("crashed", crashed_udf("barometric_reading")) \
                                 .withColumn("min", minimum_udf("barometric_reading"))
 
-        # crashed_DF = processed_DF.filter(processed_DF['malfunctioning'])
+        malfunctioning_DF = processed_DF.filter(processed_DF['malfunctioning'])
+        crashed_DF = processed_DF.filter(processed_DF['crashed'])
 
-        processed_DF.show()
+        print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
+        print('Total number of crashed drones = {}'.format(crashed_DF.count()))
 
-        # Total_number = crashed_DF.count()
-
-        # malfunctioning_DF.coalesce(2)\
-        #                  .write\
-        #                  .mode('append')\
-        #                  .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
-
-        # print('Total Number of partitions = {}'.format(crashed_DF.rdd.getNumPartitions()))
-        #
-        # print('Total number of malfunctioning = {}'.format(Total_number))
+        malfunctioning_DF.coalesce(2)\
+                         .write\
+                         .mode('append')\
+                         .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
 
         processed_DF = processed_DF.drop('barometric_reading')
         processed_DF = processed_DF.drop('latitude')
