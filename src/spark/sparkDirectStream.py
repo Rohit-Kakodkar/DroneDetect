@@ -185,7 +185,7 @@ def process_drones(rdd):
                                                                             "TimeStamp")) \
                                 .withColumn("crashed", crashed_udf("barometric_reading"))
 
-        crashed_DF = processed_DF.filter(processed_DF['crashed'])
+        crashed_DF = processed_DF.filter(processed_DF['malfunctioning'])
 
         crashed_DF.show()
 
