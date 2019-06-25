@@ -10,6 +10,16 @@ import argparse
 from time import sleep
 import pandas
 
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 def parse_args():
 
     parser = argparse.ArgumentParser(description='Data generation')
@@ -23,9 +33,9 @@ def parse_args():
                                 help="partition on which this producer should send")
     parser.add_argument('--start_id', type=int, default=0,
                                 help='ID of the first device in the list')
-    parser.add_argument('--faulty', type=bool, default=False,
+    parser.add_argument('--faulty', type=str2bool, default=False,
                                 help='Is this a stream from faulty devices')
-    parser.add_argument('--crashed', type = bool, default=False,
+    parser.add_argument('--crashed', type =type=str2bool, default=False,
                                 help='Is this stream for crashed devices')
     args = parser.parse_args()
 
