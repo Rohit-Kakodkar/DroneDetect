@@ -88,57 +88,55 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
     '''
     barometric_reading = np.asarray(barometric_reading)
     TimeStamp = np.asarray(TimeStamp)
-
-    if np.amin(barometric_reading)>370:
-        return False
-        # return False
-    elif np.amin(barometric_reading)<0:
-        return False
-        # return False
-    else :
-        # Time at which the drone height is lowest
-
-        try :
-            sorted_TimeStamp = TimeStamp.argsort()
-            barometric_reading = barometric_reading[sorted_TimeStamp]
-            TimeStamp = TimeStamp[sorted_TimeStamp]
-
-            Minimum_time = TimeStamp[np.where(barometric_reading == np.amin(barometric_reading))]
-            Mid_time = TimeStamp[int(TimeStamp.size/2)]
-
-            # Define window size that you wanna pick out the data
-            # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
-            Window_Size_Secs = 10
-            print(str(barometric_reading.size))
-            print(str(TimeStamp.size))
-            sliced_barometric = barometric_reading[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
-                                                             (TimeStamp < (Minimum_time + Window_Size_Secs)))]
-            sliced_TimeStamp = TimeStamp[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
-                                                (TimeStamp < (Minimum_time + Window_Size_Secs)))]
-
-            # generate expected malfunctioning device data
-            length_array = TimeStamp[np.where((TimeStamp > (Mid_time - Window_Size_Secs)) & \
-                                                (TimeStamp < (Mid_time + Window_Size_Secs)))].size
-            anomalous_event, ts = get_anomalous_event(length_array)
-            sliced_anomalous = anomalous_event[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
-                                                         (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
-            sliced_ts = ts[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
-                                                         (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
-
-            f = interpolate.interp1d(np.linspace(0,1,len(sliced_anomalous)), sliced_anomalous)
-
-            x = np.linspace(0, 1, sliced_barometric.size)
-            compare_anomalous = f(x)
-
-            Error = RMSE((sliced_barometric), compare_anomalous)
-
-            if Error < 11:
-                return True
-            else:
-                return False
-
-        except ValueError:
+    try :
+        if np.amin(barometric_reading)>370:
             return False
+            # return False
+        elif np.amin(barometric_reading)<0:
+            return False
+            # return False
+        else :
+    # Time at which the drone height is lowest
+        sorted_TimeStamp = TimeStamp.argsort()
+        barometric_reading = barometric_reading[sorted_TimeStamp]
+        TimeStamp = TimeStamp[sorted_TimeStamp]
+
+        Minimum_time = TimeStamp[np.where(barometric_reading == np.amin(barometric_reading))]
+        Mid_time = TimeStamp[int(TimeStamp.size/2)]
+
+        # Define window size that you wanna pick out the data
+        # i.e. window = [Minimum_time-Window_Size_Secs:Minimum_time]
+        Window_Size_Secs = 10
+        print(str(barometric_reading.size))
+        print(str(TimeStamp.size))
+        sliced_barometric = barometric_reading[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
+                                                         (TimeStamp < (Minimum_time + Window_Size_Secs)))]
+        sliced_TimeStamp = TimeStamp[np.where((TimeStamp > (Minimum_time - Window_Size_Secs)) & \
+                                            (TimeStamp < (Minimum_time + Window_Size_Secs)))]
+
+        # generate expected malfunctioning device data
+        length_array = TimeStamp[np.where((TimeStamp > (Mid_time - Window_Size_Secs)) & \
+                                            (TimeStamp < (Mid_time + Window_Size_Secs)))].size
+        anomalous_event, ts = get_anomalous_event(length_array)
+        sliced_anomalous = anomalous_event[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
+                                                     (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
+        sliced_ts = ts[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
+                                                     (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
+
+        f = interpolate.interp1d(np.linspace(0,1,len(sliced_anomalous)), sliced_anomalous)
+
+        x = np.linspace(0, 1, sliced_barometric.size)
+        compare_anomalous = f(x)
+
+        Error = RMSE((sliced_barometric), compare_anomalous)
+
+        if Error < 11:
+            return True
+        else:
+            return False
+
+    except ValueError:
+        return False
 
 def detect_crashed_drones(baromatric_reading):
     """
@@ -197,12 +195,12 @@ def process_drones(rdd):
         crashed_DF = processed_DF.filter(processed_DF['crashed'])
 
         # malfunctioning_DF.show()
-        # print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
-        # print('Total number of crashed drones = {}'.format(crashed_DF.count()))
+        print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
+        print('Total number of crashed drones = {}'.format(crashed_DF.count()))
 
-        malfunctioning_DF.write\
-                         .mode('append')\
-                         .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
+        # malfunctioning_DF.write\
+        #                  .mode('append')\
+        #                  .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
 
         processed_DF = processed_DF.drop('barometric_reading')
         processed_DF = processed_DF.drop('latitude')
