@@ -169,9 +169,9 @@ def process_drones(rdd):
 
         GroupedDF = df.groupBy("device_id").agg(f.collect_list('barometric_reading').\
                                 alias('barometric_reading'),\
-                                f.collect_list('latitude').\
+                                f.min('latitude').\
                                 alias('latitude'),\
-                                f.collect_list('longitude').\
+                                f.min('longitude').\
                                 alias('longitude'),\
                                 f.collect_list('gyrometer_x').\
                                 alias('gyrometer_x'),\

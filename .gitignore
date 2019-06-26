@@ -23,5 +23,5 @@
 GoogleAPIKey.config
 
 # Files in development
-spark/spartkDirect*
 Plot_slides
+src/postgres/testing*
