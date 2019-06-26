@@ -2,15 +2,16 @@ from flask import render_template
 from app import app
 from flask import jsonify
 import psycopg2
+from kafka import KafkaConsumer
 
 @app.route('/')
 @app.route('/home')
 def home():
-   user = { 'GOOGLE_KEY': 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE' }
-   connection = psycopg2.connect(host = 'ec2-35-175-139-211.compute-1.amazonaws.com',
-                                 database = 'dronedetect',
-                                 user = 'postgres',
-                                 password = 'JailBreak0101')
+   user = { 'GOOGLE_KEY': api_key }
+   connection = psycopg2.connect(host = psnode,
+                                 database = dbname,
+                                 user = psuser,
+                                 password = pspassword)
 
    cursor = connection.cursor()
 
@@ -41,7 +42,7 @@ def home():
 
 
    return render_template("home.html",
-                           APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
+                           APIkey = api_key,
                            functioning_lat= all_latitudes,
                            functioning_lon = all_longitudes,
                            malfunctioning_lat = malfunctioning_latitudes,
@@ -52,10 +53,12 @@ def home():
 
 @app.route('/employeelogin')
 def employeelogin():
-   user = { 'GOOGLE_KEY': 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE' }
+   consumer = KafkaConsumer('numtest', bootstrap_servers=['localhost:9092'],
+   						    enable_auto_commit=True, group_id='my-group',
+   						    auto_offset_reset = 'earliest')
    latitudes = [40.7128, 40.7228, 40.7228]
    longitudes = [-74.0160, -74.0260, -74.0360]
    return render_template("employeelogin.html",
-                           APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
+                           APIkey = api_key,
                            latitudes= latitudes,
                            longitudes = longitudes)
