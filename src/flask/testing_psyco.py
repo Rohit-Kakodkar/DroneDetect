@@ -12,4 +12,5 @@ cursor.execute('''SELECT * FROM devices''')
 rows = cursor.fetchall()
 
 for row in rows:
-    print(row[1])
+    if row[4]:
+        print(row)
