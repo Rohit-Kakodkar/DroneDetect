@@ -4,6 +4,7 @@ from flask import jsonify
 import psycopg2
 from kafka import KafkaConsumer, TopicPartition
 import argparse
+from json import loads
 
 @app.route('/')
 @app.route('/home')
