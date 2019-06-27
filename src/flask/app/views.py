@@ -72,7 +72,7 @@ def employeelogin():
         longitudes.append(msg['longitude'])
         if i==1:
             consumer.commit()
-            continue
+            break
 
     return render_template("employeelogin.html",
                            APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
