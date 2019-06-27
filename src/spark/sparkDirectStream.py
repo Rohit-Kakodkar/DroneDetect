@@ -207,11 +207,11 @@ def process_drones(rdd):
         latitudes = [row.latitude for row in crashed_DF.select('latitude').collect()]
         # latitudes = crashed_DF.select('latitude').collect()
         print(latitudes)
-        # for row in crashed_DF.rdd.collect():
+        for latitude in crashed_DF.rdd.collect():
+            print(row.device_id, row.latitude, row.longitude)
         #     # data = dumps({  "device_id" : row.device_id,
         #     #                 "latitude" : row.latitude,
         #     #                 "longitude" : row.longitude}).encode('utf-8')
-        #     print(row.device_id, row.latitude, row.longitude)
         #     # Producer.send('crashed-devices', value = data)
 
         # malfunctioning_DF.write\
