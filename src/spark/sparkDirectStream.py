@@ -208,13 +208,13 @@ def process_drones(rdd):
         # latitudes = crashed_DF.select('latitude').collect()
         print(latitudes)
         for latitude, longitude, device_id in latitudes:
+            data = dumps({  "device_id" : device_id,
+                            "latitude" : latitude,
+                            "longitude" : longitude}).encode('utf-8')
+            Producer.send('crashed-devices', value = data)
             print(device_id)
             print(latitude)
             print(longitude)
-            data = dumps({  "device_id" : latitude,
-                            "latitude" : row.latitude,
-                            "longitude" : row.longitude}).encode('utf-8')
-            Producer.send('crashed-devices', value = data)
 
         # malfunctioning_DF.write\
         #                  .mode('append')\
