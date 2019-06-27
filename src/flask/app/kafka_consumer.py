@@ -2,7 +2,7 @@ from kafka import KafkaConsumer, TopicPartition
 
 # settings
 client = "localhost:9092"
-topic = 'numtest'
+topic = 'crashed-devices'
 
 # prepare consumer
 lastOffset=-1
