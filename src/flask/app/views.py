@@ -3,15 +3,16 @@ from app import app
 from flask import jsonify
 import psycopg2
 from kafka import KafkaConsumer
+import argparse
 
 @app.route('/')
 @app.route('/home')
 def home():
    user = { 'GOOGLE_KEY': api_key }
-   connection = psycopg2.connect(host = psnode,
-                                 database = dbname,
-                                 user = psuser,
-                                 password = pspassword)
+   connection = psycopg2.connect(host = 'ec2-35-175-139-211.compute-1.amazonaws.com',
+                                 database = 'dronedetect',
+                                 user = 'postgres',
+                                 password = 'JailBreak0101')
 
    cursor = connection.cursor()
 
@@ -53,12 +54,23 @@ def home():
 
 @app.route('/employeelogin')
 def employeelogin():
-   consumer = KafkaConsumer('numtest', bootstrap_servers=['localhost:9092'],
+    consumer = KafkaConsumer('crashed-devices', bootstrap_servers=['ec2-52-203-135-135.compute-1.amazonaws.com:9092',
+                            'ec2-52-70-111-222.compute-1.amazonaws.com:9092', 'ec2-34-193-78-218.compute-1.amazonaws.com'],
    						    enable_auto_commit=True, group_id='my-group',
-   						    auto_offset_reset = 'earliest')
-   latitudes = [40.7128, 40.7228, 40.7228]
-   longitudes = [-74.0160, -74.0260, -74.0360]
-   return render_template("employeelogin.html",
+   						    auto_offset_reset = 'earliest',
+                            value_deserializer=lambda x: loads(x.decode('utf-8')))
+    lastOffset = consumer.end_offsets([tp])[tp]
+    latitude = []
+    longitude = []
+    for message in consumer:
+        msg = message.value
+        latitudes.append(msg['latitude'])
+        longitudes.append(msg['longitude'])
+        if message.offset == lastOffset -1:
+    		consumer.commit()
+    		continue
+
+    return render_template("employeelogin.html",
                            APIkey = api_key,
                            latitudes= latitudes,
                            longitudes = longitudes)

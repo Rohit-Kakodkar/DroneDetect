@@ -16,6 +16,8 @@ import pgConnector
 from time import sleep
 from scipy import interpolate
 from pgConnector import PostgresConnector
+from kafka import KafkaProducer
+from json import dumps
 
 parser = ArgumentParser(description = 'DroneDetect')
 parser.add_argument('--broker', default='localhost:9092',\
@@ -33,6 +35,13 @@ parser.add_argument('--password', default='password',
 parser.add_argument('--spark_master', default='localhost', \
                             help = 'Name of master spark node')
 args = parser.parse_args()
+
+address = [x.strip() for x in args.broker.split(',')]
+
+print(address)
+sleep(10)
+
+Producer = KafkaProducer(bootstrap_servers = address)
 
 
 def spark_conf(master):
@@ -96,6 +105,7 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
             return False
             # return False
         else :
+            return True
         # Time at which the drone height is lowest
             sorted_TimeStamp = TimeStamp.argsort()
             barometric_reading = barometric_reading[sorted_TimeStamp]
@@ -197,6 +207,13 @@ def process_drones(rdd):
         # malfunctioning_DF.show()
         print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
         print('Total number of crashed drones = {}'.format(crashed_DF.count()))
+
+        for row in crashed_DF.rdd.collect():
+            data = dumps({  "device_id" : row.device_id,
+                            "latitude" : row.latitude,
+                            "longitude" : row.longitude}).encode('utf-8')
+
+            Producer.send('crashed_devices', value = data)
 
         # malfunctioning_DF.write\
         #                  .mode('append')\
