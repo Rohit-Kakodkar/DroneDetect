@@ -14,10 +14,7 @@ consumer = KafkaConsumer('crashed-devices', bootstrap_servers=['ec2-52-203-135-1
 # obtain the last offset value
 lastOffset = consumer.end_offsets([tp])[tp]
 
-for message in consumer:
-    print ("Offset:", message.offset)
-    print ("lastOffset", lastOffset)
-    print(message.value)
-    if message.offset == lastOffset-1:
-        consumer.commit()
-        break
+print ("Offset:", message.offset)
+print ("lastOffset", lastOffset)
+print(message.value)
+consumer.commit()
