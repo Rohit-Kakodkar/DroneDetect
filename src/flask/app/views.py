@@ -61,16 +61,15 @@ def employeelogin():
    						    enable_auto_commit=True, group_id='my-group',
    						    auto_offset_reset = 'earliest',
                             value_deserializer=lambda x: loads(x.decode('utf-8')))
-    lastOffset = consumer.end_offsets([tp])[tp]
+    lastOffset = consumer.beginning_offsets([tp])[tp]
     latitudes = []
     longitudes = []
     for message in consumer:
         msg = message.value
         latitudes.append(msg['latitude'])
         longitudes.append(msg['longitude'])
-        if message.offset == lastOffset -1:
-    		consumer.commit()
-    		continue
+        consumer.commit()
+    	continue
 
     return render_template("employeelogin.html",
                            APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
