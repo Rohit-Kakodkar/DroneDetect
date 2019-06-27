@@ -69,7 +69,6 @@ def employeelogin():
     latitudes.append(msg['latitude'])
     longitudes.append(msg['longitude'])
     consumer.commit()
-    continue
 
     return render_template("employeelogin.html",
                            APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
