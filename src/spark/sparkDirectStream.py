@@ -205,11 +205,11 @@ def process_drones(rdd):
         print('Total number of crashed drones = {}'.format(crashed_DF.count()))
 
         for row in crashed_DF.rdd.collect():
-            data = dumps({  "device_id" : row.device_id,
-                            "latitude" : row.latitude,
-                            "longitude" : row.longitude}).encode('utf-8')
+            # data = dumps({  "device_id" : row.device_id,
+            #                 "latitude" : row.latitude,
+            #                 "longitude" : row.longitude}).encode('utf-8')
             print(row.device_id, row.latitude, row.longitude)
-            Producer.send('crashed-devices', value = data)
+            # Producer.send('crashed-devices', value = data)
 
         # malfunctioning_DF.write\
         #                  .mode('append')\
@@ -221,8 +221,8 @@ def process_drones(rdd):
         processed_DF = processed_DF.drop('wind_speed')
         processed_DF = processed_DF.drop('TimeStamp')
 
-        connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
-        connector.write(processed_DF, 'devices', 'overwrite')
+        # connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
+        # connector.write(processed_DF, 'devices', 'overwrite')
 
 if __name__ == '__main__':
     '''
