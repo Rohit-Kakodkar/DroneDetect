@@ -61,8 +61,8 @@ def employeelogin():
    						    enable_auto_commit=True, group_id='my-group',
    						    auto_offset_reset = 'earliest',
                             value_deserializer=lambda x: loads(x.decode('utf-8')))
-    print('GOT HERE')
     lastOffset = consumer.beginning_offsets([tp])[tp]
+    print('GOT HERE')
     latitudes = []
     longitudes = []
     for message in consumer:
