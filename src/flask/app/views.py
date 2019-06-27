@@ -2,7 +2,7 @@ from flask import render_template
 from app import app
 from flask import jsonify
 import psycopg2
-from kafka import KafkaConsumer
+from kafka import KafkaConsumer, TopicPartition
 import argparse
 
 @app.route('/')
