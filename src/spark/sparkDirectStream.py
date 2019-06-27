@@ -204,18 +204,14 @@ def process_drones(rdd):
         print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
         print('Total number of crashed drones = {}'.format(crashed_DF.count()))
 
-        latitudes = [(row.latitude, row.longitude, row.device_id) for row in crashed_DF.select('latitude', 'longitude', 'device_id').collect()]
+        tuple_list = [(row.latitude, row.longitude, row.device_id) for row in crashed_DF.select('latitude', 'longitude', 'device_id').collect()]
         # latitudes = crashed_DF.select('latitude').collect()
-        print(latitudes)
-        for latitude, longitude, device_id in latitudes:
+        for latitude, longitude, device_id in tuple_list:
             data = dumps({  "device_id" : device_id,
                             "latitude" : latitude,
                             "longitude" : longitude}).encode('utf-8')
             Producer.send('crashed-devices', value = data)
             Producer.flush()
-            print(device_id)
-            print(latitude)
-            print(longitude)
 
         # malfunctioning_DF.write\
         #                  .mode('append')\
