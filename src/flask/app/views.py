@@ -62,8 +62,8 @@ def employeelogin():
    						    auto_offset_reset = 'earliest',
                             value_deserializer=lambda x: loads(x.decode('utf-8')))
     lastOffset = consumer.end_offsets([tp])[tp]
-    latitude = []
-    longitude = []
+    latitudes = []
+    longitudes = []
     for message in consumer:
         msg = message.value
         latitudes.append(msg['latitude'])
