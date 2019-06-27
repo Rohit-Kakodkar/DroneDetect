@@ -205,6 +205,7 @@ def process_drones(rdd):
         print('Total number of crashed drones = {}'.format(crashed_DF.count()))
 
         latitudes = crashed_DF.select('latitude').collect()
+        print(latitudes)
         # for row in crashed_DF.rdd.collect():
         #     # data = dumps({  "device_id" : row.device_id,
         #     #                 "latitude" : row.latitude,
