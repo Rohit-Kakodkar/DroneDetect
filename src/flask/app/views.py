@@ -70,6 +70,7 @@ def employeelogin():
         msg = message.value
         latitudes.append(msg['latitude'])
         longitudes.append(msg['longitude'])
+        print(latitudes, longitudes)
         if i==1:
             consumer.commit()
             break
