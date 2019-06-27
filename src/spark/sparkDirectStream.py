@@ -208,7 +208,7 @@ def process_drones(rdd):
             data = dumps({  "device_id" : row.device_id,
                             "latitude" : row.latitude,
                             "longitude" : row.longitude}).encode('utf-8')
-
+            print(row.device_id, row.latitude, row.longitude)
             Producer.send('crashed-devices', value = data)
 
         # malfunctioning_DF.write\
