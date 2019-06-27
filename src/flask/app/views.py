@@ -8,7 +8,7 @@ import argparse
 @app.route('/')
 @app.route('/home')
 def home():
-   user = { 'GOOGLE_KEY': api_key }
+   user = { 'GOOGLE_KEY': 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE' }
    connection = psycopg2.connect(host = 'ec2-35-175-139-211.compute-1.amazonaws.com',
                                  database = 'dronedetect',
                                  user = 'postgres',
@@ -43,7 +43,7 @@ def home():
 
 
    return render_template("home.html",
-                           APIkey = api_key,
+                           APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
                            functioning_lat= all_latitudes,
                            functioning_lon = all_longitudes,
                            malfunctioning_lat = malfunctioning_latitudes,
@@ -71,6 +71,6 @@ def employeelogin():
     		continue
 
     return render_template("employeelogin.html",
-                           APIkey = api_key,
+                           APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
                            latitudes= latitudes,
                            longitudes = longitudes)

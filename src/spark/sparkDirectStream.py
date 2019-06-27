@@ -38,9 +38,6 @@ args = parser.parse_args()
 
 address = [x.strip() for x in args.broker.split(',')]
 
-print(address)
-sleep(10)
-
 Producer = KafkaProducer(bootstrap_servers = address)
 
 
