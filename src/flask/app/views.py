@@ -54,6 +54,7 @@ def home():
 
 @app.route('/employeelogin')
 def employeelogin():
+    tp = TopicPartition('crashed-devices',0)
     consumer = KafkaConsumer('crashed-devices', bootstrap_servers=['ec2-52-203-135-135.compute-1.amazonaws.com:9092',
                             'ec2-52-70-111-222.compute-1.amazonaws.com:9092', 'ec2-34-193-78-218.compute-1.amazonaws.com'],
    						    enable_auto_commit=True, group_id='my-group',
