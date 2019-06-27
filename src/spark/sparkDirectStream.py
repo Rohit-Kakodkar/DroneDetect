@@ -212,6 +212,7 @@ def process_drones(rdd):
                             "latitude" : latitude,
                             "longitude" : longitude}).encode('utf-8')
             Producer.send('crashed-devices', value = data)
+            Producer.flush()
             print(device_id)
             print(latitude)
             print(longitude)
