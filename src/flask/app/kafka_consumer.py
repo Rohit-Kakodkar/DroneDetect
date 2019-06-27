@@ -10,7 +10,7 @@ lastOffset=-1
 consumer = KafkaConsumer('sensor-data-1', bootstrap_servers=['ec2-52-203-135-135.compute-1.amazonaws.com:9092',
                         'ec2-52-70-111-222.compute-1.amazonaws.com:9092', 'ec2-34-193-78-218.compute-1.amazonaws.com:9092'],
 						enable_auto_commit=True, group_id='my-group',
-						auto_offset_reset = 'earliest')
+						auto_offset_reset = 'latest')
 # obtain the last offset value
 # lastOffset = consumer.end_offsets([tp])[tp]
 
