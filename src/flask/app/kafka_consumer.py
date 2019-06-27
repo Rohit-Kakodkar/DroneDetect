@@ -6,18 +6,18 @@ topic = 'crashed-devices'
 
 # prepare consumer
 lastOffset=-1
-# tp = TopicPartition(topic,0)
+tp = TopicPartition(topic,0)
 consumer = KafkaConsumer('crashed-devices', bootstrap_servers=['ec2-52-203-135-135.compute-1.amazonaws.com:9092',
                         'ec2-52-70-111-222.compute-1.amazonaws.com:9092', 'ec2-34-193-78-218.compute-1.amazonaws.com:9092'],
 						enable_auto_commit=True, group_id='my-group',
 						auto_offset_reset = 'latest')
 # obtain the last offset value
-# lastOffset = consumer.end_offsets([tp])[tp]
+lastOffset = consumer.end_offsets([tp])[tp]
 
 for message in consumer:
-    # print ("Offset:", message.offset)
-    # print ("lastOffset", lastOffset)
+    print ("Offset:", message.offset)
+    print ("lastOffset", lastOffset)
     print(message.value)
-    # if message.offset == lastOffset-1:
-    #     consumer.commit()
-    #     break
+    if message.offset == lastOffset-1:
+        consumer.commit()
+        break
