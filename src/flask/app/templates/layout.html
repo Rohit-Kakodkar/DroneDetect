@@ -52,8 +52,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <script>
-  var barometer_chart = document.getElementById('barometer_chart').getContext('2d');
-  var myLineChart = new Chart(barometer_chart, {
+  var ctxL = document.getElementById('barometer_chart').getContext('2d');
+  var myLineChart = new Chart(ctxL, {
   type: 'line',
   data: {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
