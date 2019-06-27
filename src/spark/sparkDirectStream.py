@@ -198,8 +198,7 @@ def process_drones(rdd):
 
         processed_DF = GroupedDF.withColumn("malfunctioning", anamoly_udf("barometric_reading", \
                                                                             "TimeStamp")) \
-                                .withColumn("crashed", crashed_udf("barometric_reading"))\
-                                .withColumn("min", minimum_udf("barometric_reading"))
+                                .withColumn("crashed", crashed_udf("barometric_reading"))
 
         malfunctioning_DF = processed_DF.filter(processed_DF['malfunctioning'])
         crashed_DF = processed_DF.filter(processed_DF['crashed'])
@@ -213,22 +212,20 @@ def process_drones(rdd):
                             "latitude" : row.latitude,
                             "longitude" : row.longitude}).encode('utf-8')
 
-            Producer.send('crashed_devices', value = data)
+            Producer.send('crashed-devices', value = data)
 
         # malfunctioning_DF.write\
         #                  .mode('append')\
         #                  .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
 
         processed_DF = processed_DF.drop('barometric_reading')
-        processed_DF = processed_DF.drop('latitude')
-        processed_DF = processed_DF.drop('longitude')
         processed_DF = processed_DF.drop('gyrometer_x')
         processed_DF = processed_DF.drop('gyrometer_y')
         processed_DF = processed_DF.drop('wind_speed')
         processed_DF = processed_DF.drop('TimeStamp')
 
-        # connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
-        # connector.write(processed_DF, 'devices', 'overwrite')
+        connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
+        connector.write(processed_DF, 'devices', 'overwrite')
 
 if __name__ == '__main__':
     '''
