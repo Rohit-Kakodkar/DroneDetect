@@ -208,7 +208,7 @@ def process_drones(rdd):
         # latitudes = crashed_DF.select('latitude').collect()
         print(latitudes)
         for latitude in crashed_DF.rdd.collect():
-            print(row.device_id, row.latitude, row.longitude)
+            print(latitude)
         #     # data = dumps({  "device_id" : row.device_id,
         #     #                 "latitude" : row.latitude,
         #     #                 "longitude" : row.longitude}).encode('utf-8')
