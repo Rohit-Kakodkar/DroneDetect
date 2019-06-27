@@ -64,13 +64,12 @@ def employeelogin():
     lastOffset = consumer.beginning_offsets([tp])[tp]
     latitudes = []
     longitudes = []
-    for message in consumer:
-        print('GOT HERE')
-        msg = message.value
-        latitudes.append(msg['latitude'])
-        longitudes.append(msg['longitude'])
-        consumer.commit()
-    	continue
+    print('GOT HERE')
+    message = consumer[0]
+    latitudes.append(msg['latitude'])
+    longitudes.append(msg['longitude'])
+    consumer.commit()
+	continue
 
     return render_template("employeelogin.html",
                            APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
