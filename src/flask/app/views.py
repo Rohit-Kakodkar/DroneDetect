@@ -53,7 +53,7 @@ def home():
                            crashed_lon = crashed_longitudes
                            )
 
-@app.route('/employeelogin')
+@app.route('/employeeportal')
 def employeelogin():
     tp = TopicPartition('crashed-devices',0)
     consumer = KafkaConsumer('crashed-devices', bootstrap_servers=['ec2-52-203-135-135.compute-1.amazonaws.com:9092',
@@ -78,7 +78,7 @@ def employeelogin():
 
     consumer.close()
 
-    return render_template("employeelogin.html",
+    return render_template("employeeportal.html",
                            APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
                            latitudes= latitudes,
                            longitudes = longitudes)
