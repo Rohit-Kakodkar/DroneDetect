@@ -1,102 +1,101 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>DroneDetect</title>
-    <style>
-      /* Set the size of the div element that contains the map */
-      body {text-align : center}
-      #map {
-        height: 700px;  /* The height is 400 pixels */
-        width: 100%;  /* The width is the width of the web page */
-       }
-       #barometer_chart{
-         height: 200px;
-         width:200px;
-       }
-    </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="/">DroneDetect</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title>DroneDetect</title>
+  <style>
+  /* Set the size of the div element that contains the map */
+  body {text-align : center}
+  #map {
+    height: 700px;  /* The height is 400 pixels */
+    width: 100%;  /* The width is the width of the web page */
+  }
+  #barometer_chart{
+    height: 200px;
+    width:200px;
+  }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/">DroneDetect</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/employeeportal">Employee Portal</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/employeeportal">Employee Portal</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-    <main role="main" class="container">
-      <h1 style="padding: 50px"></h1>
-      <button id="all" class="btn btn-primary" type="button" >All</button>
-      <button id="malfunctioning" class="btn btn-primary" type="button" >Malfunctioning</button>
-      <button id="crashed" class="btn btn-primary" type="button" >Crashed</button>
-      <div id="map"></div>
-
-    </main><!-- /.container -->
+  <main role="main" class="container">
+    <h1 style="padding: 50px"></h1>
+    <button id="all" class="btn btn-primary" type="button" >All</button>
+    <button id="malfunctioning" class="btn btn-primary" type="button" >Malfunctioning</button>
+    <button id="crashed" class="btn btn-primary" type="button" >Crashed</button>
+    <div id="map"></div>
 
     <div class="container">
       <canvas id="barometer_chart"></canvas>
     </div>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </main><!-- /.container -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 
-<script>
+  <script>
 
-$(document).ready(function () {
+  $(document).ready(function () {
 
-  console.log('init');
+    console.log('init');
 
-  const initialize = function(){
+    const initialize = function(){
 
-    var ctxL = $("#barometer_chart")[0].getContext("2d");
-    var myLineChart = new Chart(ctxL, {
+      var ctxL = $("#barometer_chart")[0].getContext("2d");
+      var myLineChart = new Chart(ctxL, {
         type: 'line',
         data: {
           labels: ["January", "February", "March", "April", "May", "June", "July"],
           datasets: [{
-              label: "My First dataset",
-              data: [65, 59, 80, 81, 56, 55, 40],
-              backgroundColor: [
-                'rgba(105, 0, 132, .2)',
-              ],
-              borderColor: [
-                'rgba(200, 99, 132, .7)',
-              ],
-              borderWidth: 2
-            },
-            {
-              label: "My Second dataset",
-              data: [28, 48, 40, 19, 86, 27, 90],
-              backgroundColor: [
-                'rgba(0, 137, 132, .2)',
-              ],
-              borderColor: [
-                'rgba(0, 10, 130, .7)',
-              ],
-              borderWidth: 2
-            }
-          ]
-        },
-        options: {
-          responsive: true
-        }
-      });
+            label: "My First dataset",
+            data: [65, 59, 80, 81, 56, 55, 40],
+            backgroundColor: [
+              'rgba(105, 0, 132, .2)',
+            ],
+            borderColor: [
+              'rgba(200, 99, 132, .7)',
+            ],
+            borderWidth: 2
+          },
+          {
+            label: "My Second dataset",
+            data: [28, 48, 40, 19, 86, 27, 90],
+            backgroundColor: [
+              'rgba(0, 137, 132, .2)',
+            ],
+            borderColor: [
+              'rgba(0, 10, 130, .7)',
+            ],
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true
+      }
+    });
 
   };
 
@@ -133,51 +132,51 @@ $(document).ready(function () {
 
     for (var j = 0; j<latitudes.length; j++){
       var marker = new google.maps.Marker({position: {lat: latitudes[j],
-                                                      lng: longitudes[j]},
-                                                      map: map});
-    }
-  });
+        lng: longitudes[j]},
+        map: map});
+      }
+    });
 
-  $( "#malfunctioning" ).click(function() {
+    $( "#malfunctioning" ).click(function() {
 
-    //alert( "Handler for .click() all." );
-    // The location of Uluru
-    var NY = {lat: 40.7128, lng: -74.0060};
-    // The map, centered at Uluru
-    var map = new google.maps.Map(document.getElementById('map'), {zoom: 11, center: NY});
-    // The marker, positioned at Uluru
-    latitudes = {{malfunctioning_lat}}
-    longitudes = {{malfunctioning_lon}}
-    for (var j = 0; j<latitudes.length; j++){
-      var marker = new google.maps.Marker({position: {lat: latitudes[j],
-                                                      lng: longitudes[j]},
-                                                      map: map});
-    }
-  });
+      //alert( "Handler for .click() all." );
+      // The location of Uluru
+      var NY = {lat: 40.7128, lng: -74.0060};
+      // The map, centered at Uluru
+      var map = new google.maps.Map(document.getElementById('map'), {zoom: 11, center: NY});
+      // The marker, positioned at Uluru
+      latitudes = {{malfunctioning_lat}}
+      longitudes = {{malfunctioning_lon}}
+      for (var j = 0; j<latitudes.length; j++){
+        var marker = new google.maps.Marker({position: {lat: latitudes[j],
+          lng: longitudes[j]},
+          map: map});
+        }
+      });
 
-  $( "#crashed" ).click(function() {
+      $( "#crashed" ).click(function() {
 
-    //alert( "Handler for .click() all." );
-    // The location of Uluru
-    var NY = {lat: 40.7128, lng: -74.0060};
-    // The map, centered at Uluru
-    var map = new google.maps.Map(document.getElementById('map'), {zoom: 11, center: NY});
-    // The marker, positioned at Uluru
-    latitudes = {{crashed_lat}}
-    longitudes = {{crashed_lon}}
-    for (var j = 0; j<latitudes.length; j++){
-      var marker = new google.maps.Marker({position: {lat: latitudes[j],
-                                                      lng: longitudes[j]},
-                                                      map: map});
-    }
-  });
-});
+        //alert( "Handler for .click() all." );
+        // The location of Uluru
+        var NY = {lat: 40.7128, lng: -74.0060};
+        // The map, centered at Uluru
+        var map = new google.maps.Map(document.getElementById('map'), {zoom: 11, center: NY});
+        // The marker, positioned at Uluru
+        latitudes = {{crashed_lat}}
+        longitudes = {{crashed_lon}}
+        for (var j = 0; j<latitudes.length; j++){
+          var marker = new google.maps.Marker({position: {lat: latitudes[j],
+            lng: longitudes[j]},
+            map: map});
+          }
+        });
+      });
 
 
 
-</script>
+    </script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{APIkey}}">
-</script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{APIkey}}">
+    </script>
   </body>
-</html>
+  </html>
