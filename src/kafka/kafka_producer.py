@@ -46,11 +46,11 @@ class Generate_data():
         """
         self.dataProducer = KafkaProducer(bootstrap_servers=address)
         self.ndrones = n
-        self.event_log = np.zeros(int(0.3*n), dtype = bool)
-        self.__crashed_event_log = np.zeros(int(0.1*n), dtype = bool)
+        self.event_log = np.zeros(int(0.15*n), dtype = bool)
+        self.__crashed_event_log = np.zeros(int(0.15*n), dtype = bool)
         self.__crashed_barometric_data = np.zeros(int(0.1*n))
-        self.event_log_time = -20*np.ones(int(0.3*n))
-        self.__barometer_event_reading = np.zeros(int(0.3*n))
+        self.event_log_time = -20*np.ones(int(0.15*n))
+        self.__barometer_event_reading = np.zeros(int(0.15*n))
 
     def Serialize_JSON(self):
         """
@@ -63,7 +63,7 @@ class Generate_data():
         """
             instantiate anomalous event
         """
-        for i in range(int(0.3*self.ndrones)):
+        for i in range(int(0.15*self.ndrones)):
             if np.random.uniform(0,1) < 0.1:
                 self.event_log[i] = True
 
@@ -71,14 +71,14 @@ class Generate_data():
         """
             Stop anamalous event
         """
-        for i in range(int(0.3*self.ndrones)):
+        for i in range(int(0.15*self.ndrones)):
             if self.event_log[i] and self.event_log_time[i]>=20:
                 self.event_log[i] = False
                 self.event_log_time[i] = -20
 
     def update_time_log(self):
         dt = 0.1
-        for i in range(int(0.3*self.ndrones)):
+        for i in range(int(0.15*self.ndrones)):
             if self.event_log[i]:
                 self.event_log_time += dt
 
@@ -88,7 +88,7 @@ class Generate_data():
         """
         self.instantiate_event()
         self.update_time_log()
-        for i in range(int(0.3*self.ndrones)):
+        for i in range(int(0.15*self.ndrones)):
             if self.event_log[i]:
                 ts = self.event_log_time[i]
                 self.__barometer_event_reading[i] = recovery_event(0, 1, 100, ts, 1)\
@@ -120,9 +120,9 @@ class Generate_data():
             self.generate_event()
             self.crashed_event()
 
-            faulty_baromatric_reading = np.random.randint(low = 395, high = 405, size = int(0.3*self.ndrones)) + self.__barometer_event_reading
+            faulty_baromatric_reading = np.random.randint(low = 395, high = 405, size = int(0.15*self.ndrones)) + self.__barometer_event_reading
             crashed_baromatric_reading = self.__crashed_barometric_data
-            functioning_baromatric_reading = np.random.randint(low = 395, high = 405, size = int(0.6*self.ndrones))
+            functioning_baromatric_reading = np.random.randint(low = 395, high = 405, size = int(0.75*self.ndrones))
             baromatric_reading = np.concatenate((functioning_baromatric_reading, crashed_baromatric_reading, faulty_baromatric_reading), axis = 0)
             gyrometer_x = np.random.uniform(-0.4, 0.4, self.ndrones)
             gyrometer_y = np.random.uniform(-0.4, 0.4, self.ndrones)
