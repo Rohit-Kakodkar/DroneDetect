@@ -10,7 +10,7 @@ from json import loads
 @app.route('/home')
 def home():
    user = { 'GOOGLE_KEY': 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE' }
-   connection = psycopg2.connect(host = 'ec2-35-175-139-211.compute-1.amazonaws.com',
+   connection = psycopg2.connect(host = 'ec2-18-212-177-209.compute-1.amazonaws.com',
                                  database = 'dronedetect',
                                  user = 'postgres',
                                  password = 'JailBreak0101')
