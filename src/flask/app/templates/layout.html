@@ -13,7 +13,7 @@
   }
   /* Set the size of the div element that contains the map */
   #map {
-    height: 100%;  /* The height is 400 pixels */
+    height: 700px;  /* The height is 400 pixels */
     width: 100%;  /* The width is the width of the web page */
   }
   #barometer_chart{
@@ -44,15 +44,15 @@
   <main role = 'main' class = 'container'>
     <h1 style="padding: 50px"></h1>
       <div class="row no-gutter">
-        <div class="col-9">
+        <div class="col">
           <button id="all" class="btn btn-primary" type="button" >All</button>
           <button id="malfunctioning" class="btn btn-primary" type="button" >Malfunctioning</button>
           <button id="crashed" class="btn btn-primary" type="button" >Crashed</button>
           <div id="map"></div>
         </div>
-        <div class="col-3">
+        <!-- <div class="col-3">
           <canvas id="barometer_chart"></canvas>
-        </div>
+        </div> -->
     </div>
 
   </main>
