@@ -102,7 +102,6 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
             return False
             # return False
         else :
-            return True
         # Time at which the drone height is lowest
             sorted_TimeStamp = TimeStamp.argsort()
             barometric_reading = barometric_reading[sorted_TimeStamp]
