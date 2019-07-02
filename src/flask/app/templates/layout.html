@@ -46,7 +46,7 @@
     </div>
   </nav>
 
-    <h1 style="padding: 50px"></h1>
+    <!-- <h1 style="padding: 50px"></h1>
       <div class="row align-items-center">
         <div class="col-8">
           <button id="all" class="btn btn-primary" type="button" >All</button>
@@ -57,10 +57,10 @@
         <div class="col-4">
           <canvas id="barometer_chart"></canvas>
         </div>
-    </div>
+    </div> -->
 
 
-  <!-- <main role="main" class="container">
+  <main role="main" class="container">
     <h1 style="padding: 50px"></h1>
     <button id="all" class="btn btn-primary" type="button" >All</button>
     <button id="malfunctioning" class="btn btn-primary" type="button" >Malfunctioning</button>
@@ -70,7 +70,7 @@
     <div class="container">
       <canvas id="barometer_chart"></canvas>
     </div>
-  </main> -->
+  </main>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -83,43 +83,43 @@
 
     console.log('init');
 
-    function draw_graph(i){
-
-      var ctxL = $("#barometer_chart")[0].getContext("2d");
-      var myLineChart = new Chart(ctxL, {
-        type: 'line',
-        data: {
-          labels: ["January", "February", "March", "April", "May", "June", "July"],
-          datasets: [{
-            label: "My First dataset",
-            data: [65, 59, 80, 81, 56, 55, i],
-            backgroundColor: [
-              'rgba(105, 0, 132, .2)',
-            ],
-            borderColor: [
-              'rgba(200, 99, 132, .7)',
-            ],
-            borderWidth: 2
-          },
-          {
-            label: "My Second dataset",
-            data: [28, 48, 40, 19, 86, 27, i],
-            backgroundColor: [
-              'rgba(0, 137, 132, .2)',
-            ],
-            borderColor: [
-              'rgba(0, 10, 130, .7)',
-            ],
-            borderWidth: 2
-          }
-        ]
-      },
-      options: {
-        responsive: true
-      }
-    });
-
-  };
+  //   function draw_graph(i){
+  //
+  //     var ctxL = $("#barometer_chart")[0].getContext("2d");
+  //     var myLineChart = new Chart(ctxL, {
+  //       type: 'line',
+  //       data: {
+  //         labels: ["January", "February", "March", "April", "May", "June", "July"],
+  //         datasets: [{
+  //           label: "My First dataset",
+  //           data: [65, 59, 80, 81, 56, 55, i],
+  //           backgroundColor: [
+  //             'rgba(105, 0, 132, .2)',
+  //           ],
+  //           borderColor: [
+  //             'rgba(200, 99, 132, .7)',
+  //           ],
+  //           borderWidth: 2
+  //         },
+  //         {
+  //           label: "My Second dataset",
+  //           data: [28, 48, 40, 19, 86, 27, i],
+  //           backgroundColor: [
+  //             'rgba(0, 137, 132, .2)',
+  //           ],
+  //           borderColor: [
+  //             'rgba(0, 10, 130, .7)',
+  //           ],
+  //           borderWidth: 2
+  //         }
+  //       ]
+  //     },
+  //     options: {
+  //       responsive: true
+  //     }
+  //   });
+  //
+  // };
 
   // initialize();
 
@@ -156,7 +156,6 @@
       var marker = new google.maps.Marker({position: {lat: latitudes[j],
         lng: longitudes[j]},
         map: map});
-        draw_graph(j);
       }
     });
 
