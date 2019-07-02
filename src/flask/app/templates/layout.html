@@ -79,6 +79,10 @@
 
   <script>
 
+  $(document).ready(function () {
+
+    console.log('init');
+
   // const mapinit = function() {
   //   //alert( "Handler for .click() all." );
   //   // The location of Uluru
@@ -149,11 +153,6 @@
             map: map});
           }
         });
-      });
-
-      $(document).ready(function () {
-
-        console.log('init');
 
         const initialize = function(){
 
@@ -194,6 +193,8 @@
       };
 
       initialize();
+      });
+
 
 
     </script>
