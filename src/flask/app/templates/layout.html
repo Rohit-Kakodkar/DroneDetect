@@ -83,7 +83,7 @@
 
     console.log('init');
 
-    const initialize = function draw_graph(){
+    function draw_graph(){
 
       var ctxL = $("#barometer_chart")[0].getContext("2d");
       var myLineChart = new Chart(ctxL, {
@@ -121,7 +121,7 @@
 
   };
 
-  initialize();
+  // initialize();
 
   // const mapinit = function() {
   //   //alert( "Handler for .click() all." );
