@@ -116,6 +116,7 @@
       var marker = new google.maps.Marker({position: {lat: latitudes[j],
         lng: longitudes[j]},
         map: map});
+        draw_graph();
       }
     });
 
@@ -154,7 +155,7 @@
           }
         });
 
-        const initialize = function(){
+        const initialize = function draw_graph(){
 
           var ctxL = $("#barometer_chart")[0].getContext("2d");
           var myLineChart = new Chart(ctxL, {
