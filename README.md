@@ -32,7 +32,7 @@ The sensor data is streamed through kafka into spark streaming. Spark streaming 
 
 ### kafka setup
 
-Install and start kafka and zookeeper on a 3 node kafka cluster. 
+Install and start kafka and zookeeper on a 3 node kafka cluster or run kafka_setup.sh. Produce data using `bash src/scripts/kafka_start.sh <Number of drones>`
 
 Spark streaming characterizes a malfunctioning drone at every 1 min interval. The sensor data is compared with expected malfunctioning sensor data.
 
