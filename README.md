@@ -20,7 +20,15 @@ It is estimated that by the year 2026 there will be ~800,000 delivery drones mak
 
 The sensor data is streamed through kafka into spark streaming. Spark streaming calculates root mean square error of sensor data with characterized malfunctioning drone data to drone with unexpected flight path. The locations to malfunctioning drones is then displayed onto flask app so that flight operators at drone delivery companies can take appropriate actions. The sensor data close to malfunctioning events is stored into S3 bucket for later analysis. Finally, the locations of crashed drones are pushed into a kafka message queue to be displayed onto flask/employeeportal.
 
-# Installation instructions
+# Cluster setup
+
+1) 3 node Kafka cluster
+2) 3 node Spark cluster
+3) 1 node for PostgreSQL
+4) 1 node for flask
+5) S3 bucket
+
+# Installation
 
 
 
