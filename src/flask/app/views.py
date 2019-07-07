@@ -54,8 +54,8 @@ def home():
                            crashed_lat = crashed_latitudes,
                            crashed_lon = crashed_longitudes,
                            all = len(all_latitudes),
-                           crashed = len(crashed_lat),
-                           malfunctioning = len(malfunctioning_lat)
+                           crashed = len(crashed_latitudes),
+                           malfunctioning = len(malfunctioning_latitudes)
                            )
 
 @app.route('/employeeportal')
