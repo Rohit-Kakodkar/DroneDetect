@@ -53,7 +53,7 @@ def home():
                            malfunctioning_lon = malfunctioning_longitudes,
                            crashed_lat = crashed_latitudes,
                            crashed_lon = crashed_longitudes,
-                           all = len(all_latitudes),
+                           All = len(all_latitudes),
                            crashed = len(crashed_latitudes),
                            malfunctioning = len(malfunctioning_latitudes)
                            )
