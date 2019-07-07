@@ -37,10 +37,17 @@ Produce data using `bash src/scripts/kafka_submit.sh <Number of drones>`
 
 ### Spark setup
 
-Install and start hadoop and spark on a 3 node spark cluster or run spark_setup.sh
+Install and start hadoop and spark on a 3 node spark cluster or run spark_setup.sh.
 Start spark script using `bash src/scripts/sparksubmit.sh`
 
+### PostgreSQL setup
 
+Create an EC2 instance and run `src/setup/postgres.sh` to install and create PostgreSQL database.
+
+### Flask setup
+
+Run `bash src/setup/flask_app.sh` to create a flask node and install dependencies.
+Run `sudo ./src/flask/run.py` to start webserver
 
 Spark streaming characterizes a malfunctioning drone at every 1 min interval. The sensor data is compared with expected malfunctioning sensor data.
 
