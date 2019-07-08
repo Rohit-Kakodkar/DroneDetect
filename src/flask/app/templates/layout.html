@@ -129,6 +129,10 @@
     // The location of Uluru
     var NY = {lat: 40.7128, lng: -74.0060};
     // The map, centered at Uluru
+    var icons = {
+          location_icon = 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
+        };
+
     var map = new google.maps.Map(document.getElementById('map'), {zoom: 11, center: NY});
     // The marker, positioned at Uluru
     latitudes = {{functioning_lat}}
@@ -137,6 +141,7 @@
     for (var j = 0; j<latitudes.length; j++){
       var marker = new google.maps.Marker({position: {lat: latitudes[j],
         lng: longitudes[j]},
+        icon: location_icon,
         map: map});
       }
     });
