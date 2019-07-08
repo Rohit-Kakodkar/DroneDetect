@@ -216,8 +216,8 @@ def process_drones(rdd):
                          .mode('append')\
                          .parquet('{}/malfunctioning_devices_sensor_data.parquet'.format(s3_bucket))
 
-        # connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
-        # connector.write(processed_DF, 'devices', 'overwrite')
+        connector = PostgresConnector(args.psnode, args.dbname, args.pusername, args.password)
+        connector.write(processed_DF, 'devices', 'overwrite')
 
 if __name__ == '__main__':
     '''
