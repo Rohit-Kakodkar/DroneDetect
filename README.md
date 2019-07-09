@@ -21,7 +21,7 @@ The [web app](http://dronedetect.live/) provides locations of malfunctioning dro
 
 ![Pipeline](Images/Pipeline.png)
 
-The sensor data is streamed through kafka into spark streaming. Spark streaming calculates root mean square error of sensor data with characterized malfunctioning drone data to drone with unexpected flight path. The locations to malfunctioning drones is then displayed onto flask app so that flight operators at drone delivery companies can take appropriate actions. The sensor data close to malfunctioning events is stored into S3 bucket for later analysis. Finally, the locations of crashed drones are pushed into a kafka message queue to be displayed onto flask/employeeportal.
+The sensor data is streamed through kafka into spark streaming. Spark streaming calculates root mean square error of sensor data with characterized malfunctioning drone data to drone with unexpected flight path. The locations to malfunctioning drones is then displayed onto flask app so that flight operators at drone delivery companies can take appropriate actions. The sensor data close to malfunctioning events is stored into S3 bucket for later analysis. 
 
 # Cluster setup
 
