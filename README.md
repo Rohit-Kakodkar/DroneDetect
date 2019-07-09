@@ -45,7 +45,7 @@ Produce data using `bash src/scripts/kafka_submit.sh <Number of drones>`
 ### Spark setup
 
 Install and start hadoop and spark on a 3 node spark cluster or run spark_setup.sh.
-Start spark script using `bash scripts/sparksubmit.sh`
+Start spark script using `bash src/scripts/sparksubmit.sh`
 
 ### PostgreSQL setup
 
