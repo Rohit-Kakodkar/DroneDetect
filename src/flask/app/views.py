@@ -39,14 +39,10 @@ def home():
        if row[4]:
            crashed_latitudes.append(latitude)
            crashed_longitudes.append(longitude)
-           crashed_latitudes = crashed_latitudes[:7]
-           crashed_longitudes = crashed_longitudes[:7]
 
        if row[3]:
            malfunctioning_latitudes.append(latitude)
            malfunctioning_longitudes.append(longitude)
-           malfunctioning_latitudes = malfunctioning_latitudes[:23]
-           malfunctioning_longitudes = malfunctioning_longitudes[:23]
 
 
    return render_template("home.html",
