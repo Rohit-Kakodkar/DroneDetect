@@ -6,7 +6,8 @@ This project was built as a part of insight data engineering program. The projec
 
 It is estimated that by the year 2026 there will be ~800,000 delivery drones making deliveries across US. Manually monitoring such large such large number of drones would be practically impossible. The goal of this project is 1) To provide realtime access to location of malfunctioning drones, 2) To store sensor data close to malfunctioning event for later analysis. The locations of malfunctioning drones would then allow flight operator at drone delivery companies to take appropriate actions. The sensor data close to malfunctioning events can be later analyzed to prevent future malfunctions.
 
-The [web app](http://dronedetect.live/) provides locations of malfunctioning drones and crashed drones for easy access. 
+The [web app](http://dronedetect.live/) provides locations of malfunctioning drones and crashed drones for easy access.
+![Screenshot of web app](Images/Frontend.png)
 
 # Tools and Technologies used
 
