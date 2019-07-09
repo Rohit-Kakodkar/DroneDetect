@@ -6,9 +6,6 @@ from kafka import KafkaConsumer, TopicPartition
 import argparse
 from json import loads
 
-crashed_latitudes = []
-crashed_longitudes = []
-
 @app.route('/')
 @app.route('/home')
 def home():
@@ -95,3 +92,9 @@ def employeeportal():
                            APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
                            latitudes= latitudes,
                            longitudes = longitudes)
+
+
+    if __name__ == '__main__':
+
+        crashed_latitudes = []
+        crashed_longitudes = []
