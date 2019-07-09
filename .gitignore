@@ -1,5 +1,6 @@
 # Python Notebooks
 *.ipynb
+*.kafka
 
 # Compiled class file
 *.pyc
