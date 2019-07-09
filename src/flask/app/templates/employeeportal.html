@@ -62,12 +62,10 @@ $(document).ready(function () {
     // The map, centered at Uluru
     var map = new google.maps.Map(document.getElementById('map'), {zoom: 11, center: NY});
     // The marker, positioned at Uluru
-    latitudes = {{latitudes}}
-    longitudes = {{longitudes}}
 
     for (var j = 0; j<latitudes.length; j++){
-      var marker = new google.maps.Marker({position: {lat: latitudes[j],
-                                                      lng: longitudes[j]},
+      var marker = new google.maps.Marker({position: {lat: {{latitudes}},
+                                                      lng: {{longitudes}},
                                                       map: map});
     }
   });

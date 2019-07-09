@@ -6,6 +6,9 @@ from kafka import KafkaConsumer, TopicPartition
 import argparse
 from json import loads
 
+latitudes = [40.6349833109, 40.6268903367, 40.5383258365, 40.6224222456, 40.8552825266, 40.739323065, 40.7340164399]
+longitudes = [-73.9674308662, -73.9463895297, -74.1492046912, -74.004704123, -73.8877158182, -73.7005708962, -73.9928895187]
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -63,7 +66,7 @@ def home():
                            )
 
 @app.route('/employeeportal')
-def employeeportal():
+def employeeportal(latitudes, longitudes):
     # tp = TopicPartition('crashed-devices',0)
     # consumer = KafkaConsumer('crashed-devices', bootstrap_servers=['ec2-52-203-135-135.compute-1.amazonaws.com:9092',
     #                         'ec2-52-70-111-222.compute-1.amazonaws.com:9092', 'ec2-34-193-78-218.compute-1.amazonaws.com:9092'],
@@ -86,9 +89,6 @@ def employeeportal():
     #         break
     #
     # consumer.close()
-
-    latitudes = [40.6349833109, 40.6268903367, 40.5383258365, 40.6224222456, 40.8552825266, 40.739323065, 40.7340164399]
-    longitudes = [-73.9674308662, -73.9463895297, -74.1492046912, -74.004704123, -73.8877158182, -73.7005708962, -73.9928895187]
 
     return render_template("employeeportal.html",
                            APIkey = 'AIzaSyD9e3Rdo8fGQq6hzaXkdsdQzv9Hy0rTolE',
