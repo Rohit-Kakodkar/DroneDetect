@@ -30,3 +30,4 @@ GoogleAPIKey.config
 Plot_slides
 src/postgres/testing*
 setup/Archive
+src/testing.py
