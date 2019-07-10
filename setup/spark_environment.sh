@@ -4,8 +4,8 @@ SPARK_CLUSTER=kafka-cluster
 
 # setup spark using pegasus
 
-peg up setup/kafka_master.yml
-peg up setup/kafka-workers.yml
+peg up spark_master.yml
+peg up spark-workers.yml
 peg fetch ${SPARK_CLUSTER}
 peg install ${SPARK_CLUSTER} ssh
 peg install ${SPARK_CLUSTER} aws

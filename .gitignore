@@ -25,3 +25,4 @@ GoogleAPIKey.config
 # Files in development
 Plot_slides
 src/postgres/testing*
+setup/Archive
