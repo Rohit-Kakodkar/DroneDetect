@@ -4,8 +4,8 @@ KAFKA_CLUSTER=kafka-cluster
 
 # setup kafka using pegasus
 
-peg up setup/kafka_master.yml
-peg up setup/kafka-workers.yml
+peg up kafka_master.yml
+peg up kafka-workers.yml
 peg fetch ${KAFKA_CLUSTER}
 peg install ${KAFKA_CLUSTER} ssh
 peg install ${KAFKA_CLUSTER} aws
