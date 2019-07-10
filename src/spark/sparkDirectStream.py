@@ -47,9 +47,10 @@ def spark_conf(master):
             input - master : DNS of spark master node
             rvalue - spark_config object
     '''
+
+    # spark config
     sc_conf = SparkConf()
     sc_conf.setAppName("DroneDetect")
-    # sc_conf.setMaster("{}:7077".format(master))
     sc_conf.set("spark.executor.memory", "1000m")
     sc_conf.set("spark.executor.cores", "2")
     sc_conf.set("spark.executor.instances", "15")
@@ -61,9 +62,6 @@ def quiet_logs( sc ):
     logger = sc._jvm.org.apache.log4j
     logger.LogManager.getLogger("org"). setLevel( logger.Level.ERROR )
     logger.LogManager.getLogger("akka").setLevel( logger.Level.ERROR )
-
-def get_min(barometric_reading):
-    return float(min(barometric_reading))
 
 def get_anomalous_event(length_array):
     '''
@@ -97,10 +95,8 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
     try :
         if np.amin(barometric_reading)>370:
             return False
-            # return False
         elif np.amin(barometric_reading)<0:
             return False
-            # return False
         else :
         # Time at which the drone height is lowest
             sorted_TimeStamp = TimeStamp.argsort()
@@ -126,7 +122,6 @@ def detect_barometric_anamoly(barometric_reading, TimeStamp):
                                                          (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
             sliced_ts = ts[np.where((ts > (np.amin(sliced_TimeStamp) - Minimum_time)[0]) & \
                                                          (ts <= (np.amax(sliced_TimeStamp) - Minimum_time)[0]))]
-
             f = interpolate.interp1d(np.linspace(0,1,len(sliced_anomalous)), sliced_anomalous)
 
             x = np.linspace(0, 1, sliced_barometric.size)
@@ -199,12 +194,8 @@ def process_drones(rdd):
         malfunctioning_DF = processed_DF.filter(processed_DF['malfunctioning'])
         crashed_DF = processed_DF.filter(processed_DF['crashed'])
 
-        # malfunctioning_DF.show()
-        print('Total number of malfunctioning drones = {}'.format(malfunctioning_DF.count()))
-        print('Total number of crashed drones = {}'.format(crashed_DF.count()))
-
         tuple_list = [(row.latitude, row.longitude, row.device_id) for row in crashed_DF.select('latitude', 'longitude', 'device_id').collect()]
-        # latitudes = crashed_DF.select('latitude').collect()
+
         for latitude, longitude, device_id in tuple_list:
             data = dumps({  "device_id" : device_id,
                             "latitude" : latitude,
