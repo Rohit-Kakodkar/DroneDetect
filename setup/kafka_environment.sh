@@ -1,6 +1,6 @@
 #!/bin/sh
 
-KAFKA_CLUSTER=kafka-clusters
+KAFKA_CLUSTER=kafka-cluster
 
 # setup kafka using pegasus
 

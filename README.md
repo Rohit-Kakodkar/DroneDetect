@@ -43,8 +43,9 @@ ssh into the kafka master and run following to produce data `bash src/scripts/ka
 
 ### Spark setup
 
-Install and start hadoop and spark on a 3 node spark cluster or run spark_setup.sh.
-Start spark script using `bash src/scripts/sparksubmit.sh`
+To setup spark cluster run `bash setup/spark_environment.sh`
+
+To stark running spark, log into spark master and run `bash src/scripts/sparksubmit.sh`
 
 ### PostgreSQL setup
 
