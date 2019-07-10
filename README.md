@@ -31,10 +31,6 @@ The sensor data is streamed through kafka into spark streaming. Spark streaming 
 4) 1 node for flask
 5) S3 bucket
 
-# Directory structure
-
-
-
 # Installation
 
 ### Kafka setup
