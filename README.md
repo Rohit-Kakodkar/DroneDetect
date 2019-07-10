@@ -55,3 +55,7 @@ Create an EC2 instance and follow `setup/postgres.txt` to install and create Pos
 
 Run `bash setup/flask_app.sh` to create a flask node and install dependencies.
 Run `sudo ./src/flask/run.py` to start webserver
+
+# Possible extension
+
+Use historical data to learn malfunctioning events. These learnt events can then be used to detect future malfunctioning events.
