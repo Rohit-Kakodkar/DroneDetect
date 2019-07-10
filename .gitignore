@@ -17,7 +17,11 @@
 *.jar
 
 # YAML Files
-*.yml
+kafka_master.yml
+kafka_workers.yml
+spark_master.yml
+spark_workers.yml
+flask.yml
 
 # Google API Key File
 GoogleAPIKey.config
