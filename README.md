@@ -45,7 +45,7 @@ Start spark script using `bash src/scripts/sparksubmit.sh`
 
 ### PostgreSQL setup
 
-Create an EC2 instance and run `setup/postgres.sh` to install and create PostgreSQL database.
+Create an EC2 instance and follow `setup/postgres.txt` to install and create PostgreSQL database.
 
 ### Flask setup
 
