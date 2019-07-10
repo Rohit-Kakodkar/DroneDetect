@@ -35,8 +35,11 @@ The sensor data is streamed through kafka into spark streaming. Spark streaming 
 
 ### Kafka setup
 
-Install and start kafka and zookeeper on a 3 node kafka cluster or run kafka_setup.sh.
-Produce data using `bash src/scripts/kafka_submit.sh <Number of drones>`
+To setup kafka cluster I use pegasus. Which is a tool developed by insight to make setup easier. However you can also follow the post [here](https://medium.com/@kiranps11/kafka-and-zookeeper-multinode-cluster-setup-3511aef4a505)
+
+run `bash setup/kafka_environment.sh` to setup kafka and complete environment setup
+
+ssh into the kafka master and run following to produce data `bash src/scripts/kafka_submit.sh <Number of drones>`
 
 ### Spark setup
 
