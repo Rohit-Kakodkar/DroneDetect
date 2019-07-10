@@ -59,3 +59,7 @@ Run `sudo ./src/flask/run.py` to start webserver
 # Possible extension
 
 Use historical data to learn malfunctioning events. These learnt events can then be used to detect future malfunctioning events.
+
+# Slides
+
+Presentation slides are available [here](https://docs.google.com/presentation/d/e/2PACX-1vRutArELUr7wnPLqyi7pkm7gxxcj9-GtiutuunY15O4aDrl969-ovZLpbYKhId1Dc6yOYReni8DozDn/pub?start=false&loop=false&delayms=3000)
